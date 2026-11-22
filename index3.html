@@ -16,6 +16,9 @@
   <!-- GSAP 3 Core CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 
+  <!-- PptxGenJS CDN untuk Export 3 Slide ke PowerPoint (.pptx) langsung dari browser -->
+  <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js"></script>
+
   <style>
     /* ==========================================================================
        DESIGN TOKENS — LIGHT MODE EDITORIAL PASTEL (SERASI DENGAN SLIDE 01 & 02)
@@ -762,6 +765,98 @@
       transform: rotate(-180deg);
     }
 
+    /* Export PPTX Button (Pastel Orange Accent) */
+    .btn-export-pptx {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      height: 38px;
+      padding: 0 15px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--orange-border);
+      background: var(--orange-pastel);
+      color: #A84414;
+      font-family: var(--font-display);
+      font-size: 13.8px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.24s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .btn-export-pptx:hover:not(:disabled) {
+      background: var(--orange-accent);
+      border-color: var(--orange-accent);
+      color: #FFFFFF;
+      transform: translateY(-1px);
+      box-shadow: 0 8px 18px rgba(230, 126, 69, 0.28);
+    }
+
+    .btn-export-pptx:disabled {
+      opacity: 0.65;
+      cursor: wait;
+    }
+
+    /* Clean Floating Toast Notification for Export Status */
+    .export-toast {
+      position: fixed;
+      top: 22px;
+      right: 24px;
+      z-index: 1200;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      max-width: 380px;
+      padding: 12px 16px;
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--blue-border);
+      box-shadow: 0 14px 32px -10px rgba(27, 58, 92, 0.22);
+      color: var(--navy-deep);
+      font-size: 13px;
+      font-weight: 600;
+      line-height: 1.4;
+      opacity: 0;
+      transform: translateY(-16px);
+      pointer-events: none;
+      transition: opacity 0.28s ease, transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .export-toast.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .export-toast--success {
+      border-color: #86EFAC;
+      background: rgba(240, 253, 244, 0.97);
+      color: #166534;
+    }
+
+    .export-toast--error {
+      border-color: #FCA5A5;
+      background: rgba(254, 242, 242, 0.97);
+      color: #991B1B;
+    }
+
+    .export-toast-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--orange-accent);
+      flex-shrink: 0;
+    }
+
+    .export-toast--success .export-toast-dot {
+      background: #16A34A;
+    }
+
+    .export-toast--error .export-toast-dot {
+      background: #DC2626;
+    }
+
     /* ==========================================================================
        LAYERED PASTEL PAGE-TRANSITION CURTAINS
        Butter Yellow (#FFF3C4) -> Warm Orange (#E67E45) -> Semi-Dark Navy (#1B3A5C)
@@ -880,7 +975,7 @@
         <!-- Animated Highlight Metric Badge (~$1 Miliar) -->
         <div class="metric-hero-box js-metric-box">
           <div class="metric-value" id="metric-counter">~$0.0 Miliar</div>
-          <div class="metric-caption">Perkiraan transaksi gelap<br />sejak 2014 (Europol)</div>
+          <div class="metric-caption">Perputaran gelap sejak 2014<br />menurut Europol</div>
         </div>
 
         <div class="pillar-items">
@@ -894,7 +989,7 @@
             </span>
             <p class="point-body">
               <strong>Perputaran gelap</strong>
-              Europol memperkirakan transaksi sekitar 1 miliar dolar AS sejak 2014.
+              Europol memperkirakan transaksi ilegal mencapai sekitar 1 miliar dolar AS sejak 2014.
             </p>
           </div>
 
@@ -908,20 +1003,20 @@
             </span>
             <p class="point-body">
               <strong>Eskalasi ancaman</strong>
-              Kebocoran data memicu kejahatan turunan.
+              Kebocoran data pribadi memicu kejahatan turunan seperti pencurian identitas dan peredaran narkotika di masyarakat.
             </p>
           </div>
 
           <div class="point-box js-point-box">
             <span class="point-icon point-icon--orange" aria-hidden="true">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                <path d="M7 11V7a5 5 0 0 1 9.9-1" />
+                <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
               </svg>
             </span>
             <p class="point-body">
-              <strong>Efek jera</strong>
-              Runtuhnya rasa aman pelaku pasar gelap digital.
+              <strong>Kerugian individu &amp; organisasi</strong>
+              Individu mengalami kerugian finansial langsung, sementara perusahaan terancam kerusakan sistem dan gangguan operasional akibat malware.
             </p>
           </div>
         </div>
@@ -1018,20 +1113,33 @@
 
         <div class="pillar-summary-strip pillar-summary-strip--blue js-summary-strip">
           <span class="strip-stat">3 Strategi</span>
-          <span class="strip-desc">Sinergi forensik, kolaborasi<br />global &amp; perlindungan data</span>
+          <span class="strip-desc">Proteksi pengguna, audit<br />sistem &amp; deteksi dini global</span>
         </div>
 
         <div class="pillar-items">
           <div class="point-box js-point-box">
             <span class="point-icon point-icon--blue" aria-hidden="true">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="11" cy="11" r="7" />
-                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
               </svg>
             </span>
             <p class="point-body">
-              <strong>Forensik digital</strong>
-              Penyitaan server aktif dan pelacakan blockchain.
+              <strong>Proteksi identitas &amp; literasi siber</strong>
+              Penerapan autentikasi ganda (2FA), pengelolaan kata sandi, dan edukasi keamanan digital bagi pengguna.
+            </p>
+          </div>
+
+          <div class="point-box js-point-box">
+            <span class="point-icon point-icon--blue" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                <circle cx="12" cy="11" r="2" />
+              </svg>
+            </span>
+            <p class="point-body">
+              <strong>Audit keamanan sistem</strong>
+              Penguatan enkripsi dan audit berkala pada basis data organisasi agar informasi sensitif tidak bocor ke pasar gelap.
             </p>
           </div>
 
@@ -1044,21 +1152,8 @@
               </svg>
             </span>
             <p class="point-body">
-              <strong>Sinergi global</strong>
-              Kerja sama intelijen siber antarnegara.
-            </p>
-          </div>
-
-          <div class="point-box js-point-box">
-            <span class="point-icon point-icon--blue" aria-hidden="true">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                <circle cx="12" cy="11" r="2" />
-              </svg>
-            </span>
-            <p class="point-body">
-              <strong>Audit keamanan</strong>
-              Perlindungan data pengguna agar tidak bocor.
+              <strong>Deteksi dini &amp; sinergi global</strong>
+              Pengawasan ancaman siber, pelacakan transaksi blockchain, dan kerja sama intelijen antarnegara untuk memutus distribusi konten ilegal.
             </p>
           </div>
         </div>
@@ -1119,6 +1214,16 @@
           <span class="btn-label" id="label-pause">Pause</span>
         </button>
 
+        <!-- Export 3 Slides to PowerPoint (.pptx) -->
+        <button type="button" id="btn-export-pptx" class="btn-export-pptx" title="Unduh 3 slide lengkap dalam format PowerPoint (.pptx)">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="7 10 12 15 17 10" />
+            <line x1="12" y1="15" x2="12" y2="3" />
+          </svg>
+          <span>Export PPTX</span>
+        </button>
+
         <!-- Return to Slide 01 -->
         <button type="button" id="btn-home" class="btn-home-slide" title="Kembali ke Slide 01 (Panah Kanan / Home)">
           <span>Slide 01</span>
@@ -1130,6 +1235,12 @@
       </div>
     </footer>
   </main>
+
+  <!-- TOAST NOTIFICATION FOR PPTX EXPORT -->
+  <div id="export-toast" class="export-toast" role="status" aria-live="polite">
+    <span class="export-toast-dot" aria-hidden="true"></span>
+    <span id="export-toast-text">Menyiapkan file PowerPoint...</span>
+  </div>
 
   <!-- LAYERED PASTEL PAGE-TRANSITION CURTAINS (BUTTER YELLOW -> WARM ORANGE -> SEMI-DARK NAVY) -->
   <div class="transition-curtains" aria-hidden="true">
@@ -1584,6 +1695,577 @@
     }
 
     /**
+     * =========================================================================
+     * 3. EXPORT 3 SLIDES TO POWERPOINT (.PPTX) VIA PPTXGENJS
+     *    Generates editable widescreen 16:9 Light Mode Editorial-Pastel deck.
+     * =========================================================================
+     */
+    let toastTimer = null;
+
+    function showExportToast(message, variant = 'info', autoHideMs = 4000) {
+      const toast = document.getElementById('export-toast');
+      const textEl = document.getElementById('export-toast-text');
+      if (!toast || !textEl) return;
+
+      if (toastTimer) clearTimeout(toastTimer);
+      toast.classList.remove('export-toast--success', 'export-toast--error');
+      if (variant === 'success') toast.classList.add('export-toast--success');
+      if (variant === 'error') toast.classList.add('export-toast--error');
+
+      textEl.textContent = message;
+      toast.classList.add('is-visible');
+
+      if (autoHideMs > 0) {
+        toastTimer = setTimeout(() => {
+          toast.classList.remove('is-visible');
+        }, autoHideMs);
+      }
+    }
+
+    async function exportPresentationToPptx() {
+      const btnExport = document.getElementById('btn-export-pptx');
+
+      if (typeof window.PptxGenJS === 'undefined') {
+        showExportToast(
+          'Gagal memuat library PptxGenJS. Pastikan koneksi internet aktif lalu coba lagi.',
+          'error',
+          5200
+        );
+        return;
+      }
+
+      try {
+        if (btnExport) btnExport.disabled = true;
+        showExportToast('Menyusun 3 slide PowerPoint (.pptx)...', 'info', 0);
+
+        const pptx = new window.PptxGenJS();
+        pptx.layout = 'LAYOUT_16x9'; // 10 x 5.625 in
+        pptx.author = 'Investigasi Kejahatan Komputer';
+        pptx.company = 'Studi Kasus AlphaBay';
+        pptx.subject = 'Illegal Contents - Operasi Bayonet';
+        pptx.title = 'Studi Kasus AlphaBay - 3 Slides';
+
+        // Shared Editorial-Pastel Color Palette (hex without #)
+        const C = {
+          bg: 'FCFBF8',
+          white: 'FFFFFF',
+          navy: '1B3A5C',
+          navyMid: '2C5282',
+          slate: '475569',
+          muted: '64748B',
+          border: 'DCE4EE',
+          bluePastel: 'DCEBFA',
+          blueSoft: 'EDF5FD',
+          blueBorder: 'B8D6F5',
+          blueAccent: '4A7FB5',
+          peachPastel: 'FFE5D4',
+          peachSoft: 'FFF3EB',
+          peachBorder: 'FBC9AB',
+          orangeAccent: 'E67E45',
+          yellowPastel: 'FFF3C4',
+          yellowSoft: 'FFF9E3',
+          yellowBorder: 'F4DB85',
+          yellowAccent: 'D9A426'
+        };
+
+        const F_HEAD = 'Calibri';
+        const F_BODY = 'Calibri';
+
+        /* -------------------------------------------------------------------
+           SLIDE 01: IDENTITAS & KRONOLOGI OPERASI BAYONET
+        ------------------------------------------------------------------- */
+        const s1 = pptx.addSlide();
+        s1.background = { color: C.bg };
+
+        // Top subtle decorative pastel corner bar
+        s1.addShape(pptx.ShapeType.rect, { x: 0, y: 0, w: 10, h: 0.08, fill: { color: C.navy }, line: { color: C.navy, pt: 0 } });
+
+        // Header pill & badge
+        s1.addShape(pptx.ShapeType.roundRect, {
+          x: 0.4, y: 0.22, w: 5.5, h: 0.26, rectRadius: 0.13,
+          fill: { color: C.white }, line: { color: C.blueBorder, pt: 0.8 }
+        });
+        s1.addText('SLIDE 01  |  INVESTIGASI KEJAHATAN KOMPUTER  •  ILLEGAL CONTENTS', {
+          x: 0.48, y: 0.24, w: 5.35, h: 0.22,
+          fontFace: F_BODY, fontSize: 8.5, bold: true, color: C.navyMid, valign: 'middle', margin: 0
+        });
+
+        s1.addShape(pptx.ShapeType.roundRect, {
+          x: 7.55, y: 0.22, w: 2.05, h: 0.26, rectRadius: 0.13,
+          fill: { color: C.yellowPastel }, line: { color: C.yellowBorder, pt: 0.8 }
+        });
+        s1.addText('OPERASI BAYONET • 2017', {
+          x: 7.6, y: 0.24, w: 1.95, h: 0.22,
+          fontFace: F_BODY, fontSize: 8.5, bold: true, color: '8A6208', align: 'center', valign: 'middle', margin: 0
+        });
+
+        // Title & Subtitle
+        s1.addText('Identitas & Kronologi Operasi Bayonet', {
+          x: 0.4, y: 0.54, w: 9.2, h: 0.4,
+          fontFace: F_HEAD, fontSize: 23, bold: true, color: C.navy, margin: 0
+        });
+        s1.addText('Tinjauan Penutupan Dark Market AlphaBay di Jaringan Tor', {
+          x: 0.4, y: 0.93, w: 9.2, h: 0.22,
+          fontFace: F_BODY, fontSize: 11, color: C.slate, margin: 0
+        });
+
+        // Left Column: Card 1 - Identitas Kasus
+        s1.addShape(pptx.ShapeType.roundRect, {
+          x: 0.4, y: 1.24, w: 3.78, h: 2.04, rectRadius: 0.12,
+          fill: { color: C.white }, line: { color: C.border, pt: 0.9 }
+        });
+        s1.addText('Identitas Kasus', {
+          x: 0.56, y: 1.34, w: 3.4, h: 0.26,
+          fontFace: F_HEAD, fontSize: 12.5, bold: true, color: C.navy, margin: 0
+        });
+
+        const s1Identity = [
+          { label: 'NAMA KASUS', val: 'Penutupan Dark Market AlphaBay', fill: C.bluePastel, border: C.blueBorder },
+          { label: 'TAHUN', val: '2014 sampai Juli 2017', fill: C.peachPastel, border: C.peachBorder },
+          { label: 'LOKASI', val: 'Thailand, AS dan Eropa', fill: C.yellowPastel, border: C.yellowBorder }
+        ];
+        s1Identity.forEach((item, idx) => {
+          const yPos = 1.66 + idx * 0.52;
+          s1.addShape(pptx.ShapeType.roundRect, {
+            x: 0.56, y: yPos, w: 3.46, h: 0.44, rectRadius: 0.08,
+            fill: { color: item.fill }, line: { color: item.border, pt: 0.7 }
+          });
+          s1.addText(
+            [
+              { text: item.label + '\n', options: { fontSize: 7.5, bold: true, color: C.slate } },
+              { text: item.val, options: { fontSize: 10.5, bold: true, color: C.navy } }
+            ],
+            { x: 0.68, y: yPos + 0.04, w: 3.24, h: 0.36, fontFace: F_BODY, valign: 'middle', margin: 0 }
+          );
+        });
+
+        // Left Column: Card 2 - Dua Sumber Resmi Terpercaya
+        s1.addShape(pptx.ShapeType.roundRect, {
+          x: 0.4, y: 3.40, w: 3.78, h: 1.88, rectRadius: 0.12,
+          fill: { color: C.white }, line: { color: C.border, pt: 0.9 }
+        });
+        s1.addText('Dua Sumber Resmi Terpercaya', {
+          x: 0.56, y: 3.50, w: 3.46, h: 0.26,
+          fontFace: F_HEAD, fontSize: 12.5, bold: true, color: C.navy, margin: 0
+        });
+
+        const s1Sources = [
+          { org: '1. U.S. Department of Justice', desc: 'Siaran pers penutupan AlphaBay (20 Juli 2017)' },
+          { org: '2. Europol', desc: 'Laporan koordinasi penindakan dark web AlphaBay dan Hansa (20 Juli 2017)' }
+        ];
+        s1Sources.forEach((src, idx) => {
+          const yPos = 3.82 + idx * 0.70;
+          s1.addShape(pptx.ShapeType.roundRect, {
+            x: 0.56, y: yPos, w: 3.46, h: 0.62, rectRadius: 0.08,
+            fill: { color: 'F8FAFC' }, line: { color: C.border, pt: 0.7 }
+          });
+          s1.addText(
+            [
+              { text: src.org + '\n', options: { fontSize: 10, bold: true, color: C.navy } },
+              { text: src.desc, options: { fontSize: 8.8, color: C.slate } }
+            ],
+            { x: 0.68, y: yPos + 0.05, w: 3.24, h: 0.52, fontFace: F_BODY, valign: 'middle', margin: 0 }
+          );
+        });
+
+        // Right Column: Kronologi 4 Tahap
+        s1.addText('Kronologi Penindakan (4 Tahap Utama)', {
+          x: 4.42, y: 1.22, w: 5.18, h: 0.26,
+          fontFace: F_HEAD, fontSize: 12.5, bold: true, color: C.navy, margin: 0
+        });
+
+        // Vertical timeline connector line
+        s1.addShape(pptx.ShapeType.rect, {
+          x: 4.54, y: 1.66, w: 0.04, h: 3.32,
+          fill: { color: C.orangeAccent }, line: { color: C.orangeAccent, pt: 0 }
+        });
+
+        const s1Timeline = [
+          {
+            date: '2014 sampai 2016', title: 'Pertumbuhan pasar gelap',
+            desc: 'AlphaBay berkembang di jaringan Tor, mencapai sekitar 200 ribu pengguna dan 40 ribu penjual menurut Europol.',
+            badgeFill: C.bluePastel, badgeColor: C.navy, dotColor: C.navy
+          },
+          {
+            date: '5 Juli 2017', title: 'Penangkapan administrator',
+            desc: 'Alexandre Cazes, pendiri yang diduga, ditangkap otoritas Thailand di Bangkok atas permintaan AS, saat masih login sebagai admin situs.',
+            badgeFill: C.peachPastel, badgeColor: 'B84F1A', dotColor: C.orangeAccent
+          },
+          {
+            date: '12 Juli 2017', title: 'Tersangka meninggal',
+            desc: 'Cazes ditemukan meninggal di tahanan sebelum diadili, sehingga tidak ada putusan pengadilan.',
+            badgeFill: C.yellowPastel, badgeColor: '8A6208', dotColor: C.yellowAccent
+          },
+          {
+            date: '20 Juli 2017', title: 'Penyitaan infrastruktur global',
+            desc: 'AS dan Eropa mengumumkan penyitaan AlphaBay dan pengambilalihan Hansa Market, situs ditutup permanen.',
+            badgeFill: C.navy, badgeColor: C.white, dotColor: C.navyMid
+          }
+        ];
+
+        s1Timeline.forEach((step, idx) => {
+          const yPos = 1.54 + idx * 0.95;
+          s1.addShape(pptx.ShapeType.ellipse, {
+            x: 4.46, y: yPos + 0.34, w: 0.20, h: 0.20,
+            fill: { color: C.white }, line: { color: step.dotColor, pt: 2.2 }
+          });
+          s1.addShape(pptx.ShapeType.roundRect, {
+            x: 4.78, y: yPos, w: 4.82, h: 0.86, rectRadius: 0.1,
+            fill: { color: C.white }, line: { color: C.border, pt: 0.8 }
+          });
+          s1.addShape(pptx.ShapeType.roundRect, {
+            x: 4.90, y: yPos + 0.09, w: 1.52, h: 0.22, rectRadius: 0.06,
+            fill: { color: step.badgeFill }, line: { color: step.badgeFill, pt: 0 }
+          });
+          s1.addText(step.date, {
+            x: 4.92, y: yPos + 0.10, w: 1.48, h: 0.20,
+            fontFace: F_BODY, fontSize: 8.2, bold: true, color: step.badgeColor, align: 'center', valign: 'middle', margin: 0
+          });
+          s1.addText(step.title, {
+            x: 6.50, y: yPos + 0.08, w: 2.98, h: 0.24,
+            fontFace: F_HEAD, fontSize: 11, bold: true, color: C.navy, valign: 'middle', margin: 0
+          });
+          s1.addText(step.desc, {
+            x: 4.90, y: yPos + 0.35, w: 4.58, h: 0.45,
+            fontFace: F_BODY, fontSize: 8.8, color: C.slate, valign: 'top', margin: 0
+          });
+        });
+
+        /* -------------------------------------------------------------------
+           SLIDE 02: ALUR KEJAHATAN, KORBAN DAN KATEGORI
+        ------------------------------------------------------------------- */
+        const s2 = pptx.addSlide();
+        s2.background = { color: C.bg };
+        s2.addShape(pptx.ShapeType.rect, { x: 0, y: 0, w: 10, h: 0.08, fill: { color: C.navy }, line: { color: C.navy, pt: 0 } });
+
+        s2.addShape(pptx.ShapeType.roundRect, {
+          x: 0.4, y: 0.22, w: 4.95, h: 0.26, rectRadius: 0.13,
+          fill: { color: C.white }, line: { color: C.blueBorder, pt: 0.8 }
+        });
+        s2.addText('SLIDE 02  |  ANALISIS MODUS, KORBAN DAN KLASIFIKASI', {
+          x: 0.48, y: 0.24, w: 4.8, h: 0.22,
+          fontFace: F_BODY, fontSize: 8.5, bold: true, color: C.navyMid, valign: 'middle', margin: 0
+        });
+
+        s2.addShape(pptx.ShapeType.roundRect, {
+          x: 7.35, y: 0.22, w: 2.25, h: 0.26, rectRadius: 0.13,
+          fill: { color: C.peachPastel }, line: { color: C.peachBorder, pt: 0.8 }
+        });
+        s2.addText('ALPHABAY • OPERASI BAYONET', {
+          x: 7.4, y: 0.24, w: 2.15, h: 0.22,
+          fontFace: F_BODY, fontSize: 8.5, bold: true, color: 'B84F1A', align: 'center', valign: 'middle', margin: 0
+        });
+
+        s2.addText('Alur Kejahatan, Korban dan Kategori', {
+          x: 0.4, y: 0.54, w: 9.2, h: 0.38,
+          fontFace: F_HEAD, fontSize: 22.5, bold: true, color: C.navy, margin: 0
+        });
+
+        // Section 1: 5-Step Flow
+        s2.addText('ALUR KEJAHATAN DAN PELACAKAN (01 → 05)', {
+          x: 0.4, y: 0.98, w: 9.2, h: 0.22,
+          fontFace: F_BODY, fontSize: 9, bold: true, color: C.navyMid, margin: 0
+        });
+
+        // Horizontal connector behind the 5 cards
+        s2.addShape(pptx.ShapeType.rect, {
+          x: 0.9, y: 1.94, w: 8.2, h: 0.04,
+          fill: { color: C.blueBorder }, line: { color: C.blueBorder, pt: 0 }
+        });
+
+        const s2Flow = [
+          { num: '01', title: 'Situs di Tor', desc: 'Server tersembunyi dioperasikan di jaringan anonim Tor', top: C.blueAccent, fill: C.white },
+          { num: '02', title: 'Listing ilegal', desc: 'Narkoba, data curian, dokumen palsu, malware dipajang', top: C.orangeAccent, fill: C.white },
+          { num: '03', title: 'Pembayaran kripto', desc: 'Bitcoin dan Monero menyamarkan identitas', top: C.yellowAccent, fill: C.white },
+          { num: '04', title: 'Korban terdampak', desc: 'Pemilik data, masyarakat, perusahaan', top: '0EA5E9', fill: C.white },
+          { num: '05', title: 'Jejak forensik', desc: 'Email pribadi admin terlacak lewat header pesan, server disita', top: 'C2410C', fill: C.peachSoft }
+        ];
+
+        s2Flow.forEach((step, idx) => {
+          const xPos = 0.4 + idx * 1.865;
+          s2.addShape(pptx.ShapeType.roundRect, {
+            x: xPos, y: 1.24, w: 1.74, h: 1.44, rectRadius: 0.1,
+            fill: { color: step.fill }, line: { color: C.border, pt: 0.85 }
+          });
+          s2.addShape(pptx.ShapeType.rect, {
+            x: xPos + 0.08, y: 1.24, w: 1.58, h: 0.06,
+            fill: { color: step.top }, line: { color: step.top, pt: 0 }
+          });
+          s2.addShape(pptx.ShapeType.roundRect, {
+            x: xPos + 0.12, y: 1.38, w: 0.36, h: 0.22, rectRadius: 0.06,
+            fill: { color: C.bluePastel }, line: { color: C.blueBorder, pt: 0.5 }
+          });
+          s2.addText(step.num, {
+            x: xPos + 0.12, y: 1.39, w: 0.36, h: 0.20,
+            fontFace: F_BODY, fontSize: 8.5, bold: true, color: C.navy, align: 'center', valign: 'middle', margin: 0
+          });
+          s2.addText(step.title, {
+            x: xPos + 0.12, y: 1.66, w: 1.50, h: 0.26,
+            fontFace: F_HEAD, fontSize: 10.5, bold: true, color: C.navy, margin: 0
+          });
+          s2.addText(step.desc, {
+            x: xPos + 0.12, y: 1.94, w: 1.50, h: 0.66,
+            fontFace: F_BODY, fontSize: 8.5, color: C.slate, valign: 'top', margin: 0
+          });
+        });
+
+        // Section 2 Left Panel: Pihak Korban
+        s2.addShape(pptx.ShapeType.roundRect, {
+          x: 0.4, y: 2.86, w: 4.48, h: 2.48, rectRadius: 0.12,
+          fill: { color: C.blueSoft }, line: { color: C.blueBorder, pt: 0.9 }
+        });
+        s2.addText('Pihak Korban', {
+          x: 0.58, y: 2.98, w: 3.0, h: 0.28,
+          fontFace: F_HEAD, fontSize: 13.5, bold: true, color: C.navy, margin: 0
+        });
+
+        const s2Victims = [
+          { head: 'Pemilik identitas:', body: ' korban pencurian data kartu kredit dan dokumen.' },
+          { head: 'Masyarakat umum:', body: ' terancam peredaran narkotika dan dokumen palsu.' },
+          { head: 'Institusi:', body: ' perusahaan jadi sasaran jual beli malware.' }
+        ];
+        s2Victims.forEach((v, idx) => {
+          const yPos = 3.36 + idx * 0.62;
+          s2.addShape(pptx.ShapeType.roundRect, {
+            x: 0.58, y: yPos, w: 4.12, h: 0.54, rectRadius: 0.08,
+            fill: { color: C.white }, line: { color: C.border, pt: 0.7 }
+          });
+          s2.addText(
+            [
+              { text: v.head, options: { bold: true, color: C.navy } },
+              { text: v.body, options: { color: C.slate } }
+            ],
+            { x: 0.70, y: yPos + 0.05, w: 3.88, h: 0.44, fontFace: F_BODY, fontSize: 9.8, valign: 'middle', margin: 0 }
+          );
+        });
+
+        // Section 2 Right Panel: Alasan Masuk Kategori
+        s2.addShape(pptx.ShapeType.roundRect, {
+          x: 5.12, y: 2.86, w: 4.48, h: 2.48, rectRadius: 0.12,
+          fill: { color: C.yellowSoft }, line: { color: C.yellowBorder, pt: 0.9 }
+        });
+        s2.addText('Alasan Masuk Kategori', {
+          x: 5.30, y: 2.98, w: 3.5, h: 0.28,
+          fontFace: F_HEAD, fontSize: 13.5, bold: true, color: C.navy, margin: 0
+        });
+
+        const s2Reasons = [
+          { head: 'Wadah terlarang:', body: ' menampung katalog muatan yang melanggar hukum.' },
+          { head: 'Distribusi digital:', body: ' memfasilitasi pertukaran data curian dan malware.' }
+        ];
+        s2Reasons.forEach((r, idx) => {
+          const yPos = 3.36 + idx * 0.62;
+          s2.addShape(pptx.ShapeType.roundRect, {
+            x: 5.30, y: yPos, w: 4.12, h: 0.54, rectRadius: 0.08,
+            fill: { color: C.white }, line: { color: C.border, pt: 0.7 }
+          });
+          s2.addText(
+            [
+              { text: r.head, options: { bold: true, color: C.navy } },
+              { text: r.body, options: { color: C.slate } }
+            ],
+            { x: 5.42, y: yPos + 0.05, w: 3.88, h: 0.44, fontFace: F_BODY, fontSize: 9.8, valign: 'middle', margin: 0 }
+          );
+        });
+
+        // Highlight Classification Box
+        s2.addShape(pptx.ShapeType.roundRect, {
+          x: 5.30, y: 4.62, w: 4.12, h: 0.58, rectRadius: 0.09,
+          fill: { color: C.navy }, line: { color: C.navy, pt: 0 }
+        });
+        s2.addText(
+          [
+            { text: 'KLASIFIKASI COMPUTER CRIME\n', options: { fontSize: 7.8, bold: true, color: 'FED7AA' } },
+            { text: 'Illegal Contents lintas negara', options: { fontSize: 12, bold: true, color: C.white } }
+          ],
+          { x: 5.44, y: 4.67, w: 3.84, h: 0.48, fontFace: F_HEAD, valign: 'middle', margin: 0 }
+        );
+
+        /* -------------------------------------------------------------------
+           SLIDE 03: DAMPAK, PRINSIP ETIKA DAN PENCEGAHAN (VERSI REVISI)
+        ------------------------------------------------------------------- */
+        const s3 = pptx.addSlide();
+        s3.background = { color: C.bg };
+        s3.addShape(pptx.ShapeType.rect, { x: 0, y: 0, w: 10, h: 0.08, fill: { color: C.navy }, line: { color: C.navy, pt: 0 } });
+
+        s3.addShape(pptx.ShapeType.roundRect, {
+          x: 0.4, y: 0.22, w: 4.85, h: 0.26, rectRadius: 0.13,
+          fill: { color: C.white }, line: { color: C.blueBorder, pt: 0.8 }
+        });
+        s3.addText('SLIDE 03  |  EVALUASI DAMPAK, ETIKA DAN MITIGASI', {
+          x: 0.48, y: 0.24, w: 4.7, h: 0.22,
+          fontFace: F_BODY, fontSize: 8.5, bold: true, color: C.navyMid, valign: 'middle', margin: 0
+        });
+
+        s3.addShape(pptx.ShapeType.roundRect, {
+          x: 6.45, y: 0.22, w: 3.15, h: 0.26, rectRadius: 0.13,
+          fill: { color: C.yellowPastel }, line: { color: C.yellowBorder, pt: 0.8 }
+        });
+        s3.addText('Penutupan Dark Market AlphaBay • Operasi Bayonet', {
+          x: 6.50, y: 0.24, w: 3.05, h: 0.22,
+          fontFace: F_BODY, fontSize: 8.2, bold: true, color: '8A6208', align: 'center', valign: 'middle', margin: 0
+        });
+
+        s3.addText('Dampak, Prinsip Etika dan Pencegahan', {
+          x: 0.4, y: 0.54, w: 9.2, h: 0.4,
+          fontFace: F_HEAD, fontSize: 22.5, bold: true, color: C.navy, margin: 0
+        });
+
+        const s3Pillars = [
+          {
+            kicker: 'PILAR 01 • IMPACT',
+            title: 'Dampak kejadian',
+            bg: C.peachSoft,
+            border: C.peachBorder,
+            topBar: C.orangeAccent,
+            bannerFill: C.navy,
+            bannerLeft: '~$1 Miliar',
+            bannerLeftColor: C.yellowPastel,
+            bannerRight: 'Perputaran gelap sejak 2014 menurut Europol',
+            bannerRightColor: 'E2EEFA',
+            items: [
+              {
+                head: 'Perputaran gelap',
+                body: 'Europol memperkirakan transaksi ilegal mencapai sekitar 1 miliar dolar AS sejak 2014.'
+              },
+              {
+                head: 'Eskalasi ancaman',
+                body: 'Kebocoran data pribadi memicu kejahatan turunan seperti pencurian identitas dan peredaran narkotika di masyarakat.'
+              },
+              {
+                head: 'Kerugian individu & organisasi',
+                body: 'Individu mengalami kerugian finansial langsung, sementara perusahaan terancam kerusakan sistem dan gangguan operasional akibat malware.'
+              }
+            ]
+          },
+          {
+            kicker: 'PILAR 02 • ETHICS',
+            title: 'Etika dilanggar',
+            bg: C.yellowSoft,
+            border: C.yellowBorder,
+            topBar: C.yellowAccent,
+            bannerFill: C.yellowPastel,
+            bannerLeft: '3 Prinsip',
+            bannerLeftColor: C.navy,
+            bannerRight: 'Pelanggaran etika profesi, publik & kedaulatan hukum',
+            bannerRightColor: C.slate,
+            items: [
+              {
+                head: 'Non-maleficence',
+                body: 'Menyediakan sarana yang merugikan keselamatan publik.'
+              },
+              {
+                head: 'Social responsibility',
+                body: 'Mengabaikan tanggung jawab sosial demi profit ilegal.'
+              },
+              {
+                head: 'Lawfulness',
+                body: 'Melanggar batas hukum dan kedaulatan digital.'
+              }
+            ]
+          },
+          {
+            kicker: 'PILAR 03 • MITIGATION',
+            title: 'Upaya pencegahan',
+            bg: C.blueSoft,
+            border: C.blueBorder,
+            topBar: C.blueAccent,
+            bannerFill: C.bluePastel,
+            bannerLeft: '3 Strategi',
+            bannerLeftColor: C.navy,
+            bannerRight: 'Proteksi pengguna, audit sistem & deteksi dini global',
+            bannerRightColor: C.slate,
+            items: [
+              {
+                head: 'Proteksi identitas & literasi siber',
+                body: 'Penerapan autentikasi ganda (2FA), pengelolaan kata sandi, dan edukasi keamanan digital bagi pengguna.'
+              },
+              {
+                head: 'Audit keamanan sistem',
+                body: 'Penguatan enkripsi dan audit berkala pada basis data organisasi agar informasi sensitif tidak bocor ke pasar gelap.'
+              },
+              {
+                head: 'Deteksi dini & sinergi global',
+                body: 'Pengawasan ancaman siber, pelacakan transaksi blockchain, dan kerja sama intelijen antarnegara untuk memutus distribusi konten ilegal.'
+              }
+            ]
+          }
+        ];
+
+        s3Pillars.forEach((col, colIdx) => {
+          const xPos = 0.4 + colIdx * 3.13;
+          s3.addShape(pptx.ShapeType.roundRect, {
+            x: xPos, y: 1.04, w: 2.94, h: 4.02, rectRadius: 0.12,
+            fill: { color: col.bg }, line: { color: col.border, pt: 0.9 }
+          });
+          s3.addShape(pptx.ShapeType.rect, {
+            x: xPos + 0.10, y: 1.04, w: 2.74, h: 0.06,
+            fill: { color: col.topBar }, line: { color: col.topBar, pt: 0 }
+          });
+          s3.addText(col.kicker, {
+            x: xPos + 0.14, y: 1.15, w: 2.66, h: 0.16,
+            fontFace: F_BODY, fontSize: 7.5, bold: true, color: C.muted, margin: 0
+          });
+          s3.addText(col.title, {
+            x: xPos + 0.14, y: 1.31, w: 2.66, h: 0.26,
+            fontFace: F_HEAD, fontSize: 13.5, bold: true, color: C.navy, margin: 0
+          });
+
+          // Summary / Metric Banner
+          s3.addShape(pptx.ShapeType.roundRect, {
+            x: xPos + 0.14, y: 1.62, w: 2.66, h: 0.48, rectRadius: 0.08,
+            fill: { color: col.bannerFill }, line: { color: col.border, pt: 0.5 }
+          });
+          s3.addText(col.bannerLeft, {
+            x: xPos + 0.22, y: 1.66, w: 1.14, h: 0.40,
+            fontFace: F_HEAD, fontSize: 12.5, bold: true, color: col.bannerLeftColor, valign: 'middle', margin: 0
+          });
+          s3.addText(col.bannerRight, {
+            x: xPos + 1.34, y: 1.66, w: 1.38, h: 0.40,
+            fontFace: F_BODY, fontSize: 7.6, color: col.bannerRightColor, align: 'right', valign: 'middle', margin: 0
+          });
+
+          // 3 Bullet Cards
+          col.items.forEach((pt, ptIdx) => {
+            const yPt = 2.19 + ptIdx * 0.93;
+            s3.addShape(pptx.ShapeType.roundRect, {
+              x: xPos + 0.14, y: yPt, w: 2.66, h: 0.85, rectRadius: 0.08,
+              fill: { color: C.white }, line: { color: C.border, pt: 0.7 }
+            });
+            s3.addText(
+              [
+                { text: pt.head + '\n', options: { fontSize: 9.5, bold: true, color: C.navy } },
+                { text: pt.body, options: { fontSize: 8.2, color: C.slate } }
+              ],
+              { x: xPos + 0.23, y: yPt + 0.05, w: 2.48, h: 0.75, fontFace: F_BODY, valign: 'top', margin: 0 }
+            );
+          });
+        });
+
+        // Closing Takeaway Strip
+        s3.addShape(pptx.ShapeType.roundRect, {
+          x: 0.4, y: 5.16, w: 9.2, h: 0.30, rectRadius: 0.08,
+          fill: { color: C.white }, line: { color: C.border, pt: 0.8 }
+        });
+        s3.addText('Operasi Bayonet • Penegakan Hukum Siber Lintas Negara • Sumber: U.S. DOJ & Europol (20 Juli 2017)', {
+          x: 0.54, y: 5.18, w: 7.4, h: 0.26,
+          fontFace: F_BODY, fontSize: 8.6, bold: true, color: C.navy, valign: 'middle', margin: 0
+        });
+        s3.addText('CASE CLOSED • JULI 2017', {
+          x: 8.0, y: 5.18, w: 1.48, h: 0.26,
+          fontFace: F_BODY, fontSize: 8, bold: true, color: 'B84F1A', align: 'right', valign: 'middle', margin: 0
+        });
+
+        await pptx.writeFile({ fileName: 'Studi_Kasus_AlphaBay_3Slides.pptx' });
+        showExportToast('Berhasil mengunduh Studi_Kasus_AlphaBay_3Slides.pptx (3 slide).', 'success', 4800);
+      } catch (err) {
+        showExportToast('Terjadi kesalahan saat membuat file PPTX. Silakan coba lagi.', 'error', 5200);
+      } finally {
+        if (btnExport) btnExport.disabled = false;
+      }
+    }
+
+    /**
      * Initialize entrance choreography and interactive controls on window load
      */
     window.onload = function () {
@@ -1593,6 +2275,7 @@
         const btnPrev = document.getElementById('btn-prev');
         const btnReplay = document.getElementById('btn-replay');
         const btnPause = document.getElementById('btn-pause');
+        const btnExport = document.getElementById('btn-export-pptx');
         const btnHome = document.getElementById('btn-home');
 
         if (btnPrev) btnPrev.addEventListener('click', navigateToSlide2);
@@ -1606,6 +2289,7 @@
         }
 
         if (btnPause) btnPause.addEventListener('click', togglePause);
+        if (btnExport) btnExport.addEventListener('click', exportPresentationToPptx);
         if (btnHome) btnHome.addEventListener('click', navigateToSlide1);
 
         // Keyboard shortcuts: ArrowLeft (Slide 02), R (Replay), Space (Pause/Play), ArrowRight / Home (Slide 01)
