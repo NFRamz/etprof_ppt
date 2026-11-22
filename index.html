@@ -423,7 +423,136 @@
       border-radius: var(--radius-md);
       background: rgba(248, 250, 252, 0.92);
       border: 1px solid rgba(27, 58, 92, 0.09);
-      transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+      text-decoration: none;
+      color: inherit;
+      cursor: pointer;
+      transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+                  border-color 0.25s ease,
+                  background 0.25s ease,
+                  box-shadow 0.25s ease;
+    }
+
+    .source-item:hover {
+      transform: translateY(-2px);
+      background: #FFFFFF;
+      border-color: var(--orange-accent);
+      box-shadow: 0 8px 20px -6px rgba(249, 115, 22, 0.16), 0 4px 10px -4px rgba(27, 58, 92, 0.06);
+    }
+
+    .source-item:focus-visible {
+      outline: 2px solid var(--orange-accent);
+      outline-offset: 2px;
+    }
+
+    .source-check {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--navy-deep), var(--navy-mid));
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+      transition: transform 0.25s ease;
+    }
+
+    .source-item:hover .source-check {
+      transform: scale(1.06);
+    }
+
+    .source-check--alt {
+      background: linear-gradient(135deg, var(--orange-accent), var(--yellow-warm));
+    }
+
+    .source-body {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .source-head-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 3px;
+    }
+
+    .source-org {
+      font-size: clamp(13.5px, 1.05vw, 15px);
+      font-weight: 700;
+      color: var(--navy-deep);
+      transition: color 0.22s ease;
+    }
+
+    .source-item:hover .source-org {
+      color: #C2410C;
+    }
+
+    .source-domain-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 8px;
+      border-radius: var(--radius-pill);
+      background: var(--blue-pastel);
+      border: 1px solid var(--blue-border);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--navy-deep);
+      white-space: nowrap;
+      transition: background-color 0.22s ease, border-color 0.22s ease, color 0.22s ease;
+    }
+
+    .source-item:hover .source-domain-badge {
+      background: var(--orange-pastel);
+      border-color: var(--orange-border);
+      color: #C2410C;
+    }
+
+    .source-ext-icon {
+      flex-shrink: 0;
+      transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .source-item:hover .source-ext-icon {
+      transform: translate(1.5px, -1.5px);
+    }
+
+    .source-desc {
+      font-size: clamp(12px, 0.9vw, 13.5px);
+      line-height: 1.42;
+      color: var(--navy-soft);
+    }
+
+    /* Subtle clickable inline source citation inside timeline text */
+    .inline-source-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      color: var(--navy-mid);
+      font-weight: 600;
+      text-decoration: underline;
+      text-decoration-color: var(--blue-border);
+      text-decoration-thickness: 1.5px;
+      text-underline-offset: 2px;
+      transition: color 0.2s ease, text-decoration-color 0.2s ease;
+    }
+
+    .inline-source-link:hover {
+      color: var(--orange-accent);
+      text-decoration-color: var(--orange-accent);
+    }
+
+    .inline-source-link svg {
+      transition: transform 0.2s ease;
+    }
+
+    .inline-source-link:hover svg {
+      transform: translate(1px, -1px);
     }
 
     .source-item:hover {
@@ -855,14 +984,14 @@
       <div class="header-top-row">
         <div class="category-pill">
           <span class="pill-dot" aria-hidden="true"></span>
-          <span>SLIDE 01 • INVESTIGASI KEJAHATAN KOMPUTER • ILLEGAL CONTENTS</span>
+          <span>SLIDE 01 &nbsp;|&nbsp; IDENTITAS KASUS, KRONOLOGI DAN VALIDASI LEMBAGA</span>
         </div>
         <div class="header-tag-right">OPERASI BAYONET • 2017</div>
       </div>
 
       <div class="title-wrap">
         <h1 class="hero-title">
-          Identitas &amp; Kronologi <span class="highlight-accent">Operasi Bayonet</span>
+          Identitas dan Kronologi <span class="highlight-accent">Operasi Bayonet</span>
         </h1>
       </div>
 
@@ -956,29 +1085,59 @@
           </div>
 
           <div class="sources-stack">
-            <div class="source-item js-source-item">
+            <a
+              class="source-item js-source-item"
+              href="https://www.justice.gov/usao-edca/pr/alphabay-largest-online-dark-market-shut-down"
+              target="_blank"
+              rel="noopener noreferrer"
+              title="Buka siaran pers resmi U.S. Department of Justice di tab baru"
+            >
               <div class="source-check" aria-hidden="true">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M20 6 9 17l-5-5"/>
                 </svg>
               </div>
-              <div>
-                <div class="source-org">1. U.S. Department of Justice</div>
+              <div class="source-body">
+                <div class="source-head-row">
+                  <div class="source-org">1. U.S. Department of Justice</div>
+                  <span class="source-domain-badge">
+                    <span>justice.gov</span>
+                    <svg class="source-ext-icon" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="M7 17 17 7"/>
+                      <path d="M7 7h10v10"/>
+                    </svg>
+                  </span>
+                </div>
                 <div class="source-desc">Siaran pers penutupan AlphaBay (20 Juli 2017)</div>
               </div>
-            </div>
+            </a>
 
-            <div class="source-item js-source-item">
+            <a
+              class="source-item js-source-item"
+              href="https://www.europol.europa.eu/media-press/newsroom/news/massive-blow-to-criminal-dark-web-activities-after-globally-coordinated-operation"
+              target="_blank"
+              rel="noopener noreferrer"
+              title="Buka laporan resmi Europol di tab baru"
+            >
               <div class="source-check source-check--alt" aria-hidden="true">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M20 6 9 17l-5-5"/>
                 </svg>
               </div>
-              <div>
-                <div class="source-org">2. Europol</div>
+              <div class="source-body">
+                <div class="source-head-row">
+                  <div class="source-org">2. Europol</div>
+                  <span class="source-domain-badge">
+                    <span>europol.europa.eu</span>
+                    <svg class="source-ext-icon" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="M7 17 17 7"/>
+                      <path d="M7 7h10v10"/>
+                    </svg>
+                  </span>
+                </div>
                 <div class="source-desc">Laporan koordinasi penindakan dark web AlphaBay dan Hansa (20 Juli 2017)</div>
               </div>
-            </div>
+            </a>
           </div>
         </article>
       </div>
@@ -1004,7 +1163,14 @@
                 <span class="step-num">01/04</span>
               </div>
               <p class="step-desc">
-                AlphaBay berkembang di jaringan Tor, mencapai sekitar 200 ribu pengguna dan 40 ribu penjual menurut Europol.
+                AlphaBay berkembang di jaringan Tor, mencapai sekitar 200 ribu pengguna dan 40 ribu penjual menurut
+                <a
+                  class="inline-source-link"
+                  href="https://www.europol.europa.eu/media-press/newsroom/news/massive-blow-to-criminal-dark-web-activities-after-globally-coordinated-operation"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title="Buka laporan resmi Europol di tab baru"
+                >Europol<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg></a>.
               </p>
             </div>
           </div>
