@@ -1,0 +1,1789 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Slide 02 — Alur Kejahatan, Korban dan Kategori | AlphaBay</title>
+
+  <!-- Google Fonts: Bricolage Grotesque (Display), Plus Jakarta Sans (Body), JetBrains Mono (Label/Code) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=JetBrains+Mono:wght@500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- GSAP 3 Core CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+  <style>
+    /* ==========================================================================
+       DESIGN TOKENS — LIGHT MODE EDITORIAL PASTEL (SERASI DENGAN SLIDE 01)
+       Palette: Warm Ivory, Deep Slate Navy, Pastel Blue, Warm Orange/Peach, Butter Yellow
+    ========================================================================== */
+    :root {
+      --bg-ivory: #FCFBF8;
+      --bg-soft: #F8FAFC;
+
+      --navy-deep: #1B3A5C;
+      --navy-mid: #2C5282;
+      --navy-soft: #475569;
+      --text-muted: #64748B;
+
+      --blue-pastel: #EBF4FF;
+      --blue-sky: #E0F2FE;
+      --blue-border: #BFDBFE;
+      --blue-accent: #3B82F6;
+
+      --orange-accent: #F97316;
+      --orange-pastel: #FFF1E6;
+      --orange-border: #FED7AA;
+
+      --yellow-accent: #EAB308;
+      --yellow-warm: #D97706;
+      --yellow-pastel: #FEF9E7;
+      --yellow-border: #FDE68A;
+
+      --card-bg: rgba(255, 255, 255, 0.84);
+      --card-bg-hover: rgba(255, 255, 255, 0.96);
+      --border-light: rgba(226, 232, 240, 0.95);
+
+      --shadow-soft: 0 10px 28px -12px rgba(27, 58, 92, 0.08), 0 4px 10px -4px rgba(27, 58, 92, 0.04);
+      --shadow-hover: 0 18px 34px -12px rgba(27, 58, 92, 0.14), 0 6px 14px -6px rgba(249, 115, 22, 0.12);
+
+      --font-display: 'Bricolage Grotesque', sans-serif;
+      --font-body: 'Plus Jakarta Sans', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+
+      --radius-sm: 10px;
+      --radius-md: 15px;
+      --radius-lg: 20px;
+      --radius-pill: 999px;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      background-color: var(--bg-ivory);
+      color: var(--navy-deep);
+      font-family: var(--font-body);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Lock desktop 16:9 presentation cleanly inside viewport without vertical scroll */
+    @media (min-width: 1024px) and (min-height: 680px) {
+      body {
+        overflow: hidden;
+      }
+    }
+
+    /* ==========================================================================
+       BACKGROUND LAYERS (WARM IVORY GRADIENT + DETERMINISTIC PASTEL CANVAS)
+    ========================================================================== */
+    .bg-base {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 14% 18%, rgba(235, 244, 255, 0.72) 0%, transparent 45%),
+        radial-gradient(circle at 86% 16%, rgba(254, 249, 231, 0.78) 0%, transparent 44%),
+        radial-gradient(circle at 80% 85%, rgba(255, 241, 230, 0.72) 0%, transparent 46%),
+        linear-gradient(160deg, #FCFBF8 0%, #F8FAFC 100%);
+    }
+
+    #pastel-canvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .bg-veil {
+      position: fixed;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+      background: radial-gradient(
+        ellipse at 50% 48%,
+        rgba(252, 251, 248, 0.38) 0%,
+        rgba(252, 251, 248, 0.08) 100%
+      );
+    }
+
+    /* ==========================================================================
+       MAIN STAGE LAYOUT
+    ========================================================================== */
+    #slide-stage {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      min-height: 100vh;
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: clamp(14px, 2vh, 26px) clamp(18px, 3vw, 44px);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: clamp(12px, 1.6vh, 18px);
+      will-change: transform, opacity;
+    }
+
+    /* ==========================================================================
+       HEADER SECTION
+    ========================================================================== */
+    .slide-header {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .header-top-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .category-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 5px 14px;
+      border-radius: var(--radius-pill);
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid var(--blue-border);
+      box-shadow: 0 4px 12px rgba(27, 58, 92, 0.05);
+      font-family: var(--font-mono);
+      font-size: clamp(10px, 0.78vw, 11.5px);
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      color: var(--navy-mid);
+    }
+
+    .pill-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--orange-accent);
+      box-shadow: 0 0 0 3px var(--orange-pastel);
+      flex-shrink: 0;
+    }
+
+    .header-tag-right {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: var(--radius-pill);
+      background: var(--orange-pastel);
+      border: 1px solid var(--orange-border);
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      font-weight: 600;
+      color: #C2410C;
+    }
+
+    .title-wrap {
+      overflow: hidden;
+      padding-bottom: 2px;
+    }
+
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(26px, 3.1vw, 42px);
+      font-weight: 800;
+      line-height: 1.08;
+      letter-spacing: -0.02em;
+      color: var(--navy-deep);
+    }
+
+    .hero-title .highlight-accent {
+      position: relative;
+      display: inline-block;
+      z-index: 1;
+    }
+
+    .hero-title .highlight-accent::after {
+      content: '';
+      position: absolute;
+      left: -3px;
+      right: -3px;
+      bottom: 3px;
+      height: 10px;
+      background: linear-gradient(90deg, var(--blue-border), var(--yellow-border));
+      border-radius: 6px;
+      z-index: -1;
+      opacity: 0.82;
+    }
+
+    /* ==========================================================================
+       SECTION 1: ALUR KEJAHATAN DAN PELACAKAN (5 HORIZONTAL STEPS + SVG FLOW)
+    ========================================================================== */
+    .flow-section {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .section-label-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .section-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: clamp(10.5px, 0.82vw, 12px);
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--navy-mid);
+    }
+
+    .section-label-bar {
+      width: 24px;
+      height: 3px;
+      border-radius: 99px;
+      background: linear-gradient(90deg, var(--blue-accent), var(--orange-accent));
+      transform-origin: left center;
+    }
+
+    .flow-hint {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      font-weight: 600;
+      color: var(--text-muted);
+      background: rgba(255, 255, 255, 0.85);
+      border: 1px solid var(--border-light);
+      padding: 3px 10px;
+      border-radius: var(--radius-pill);
+    }
+
+    .flow-stage {
+      position: relative;
+      width: 100%;
+    }
+
+    /* Animated SVG Flow Connector behind the 5 cards (visible on desktop horizontal grid) */
+    .flow-svg-layer {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+      overflow: visible;
+    }
+
+    @media (max-width: 979px) {
+      .flow-svg-layer {
+        display: none;
+      }
+    }
+
+    .flow-grid {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    @media (min-width: 640px) {
+      .flow-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (min-width: 980px) {
+      .flow-grid {
+        grid-template-columns: repeat(5, 1fr);
+        gap: clamp(10px, 1.3vw, 18px);
+      }
+    }
+
+    /* Flow Step Card */
+    .flow-card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: clamp(12px, 1.5vh, 16px) clamp(12px, 1.2vw, 15px);
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-soft);
+      transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+                  box-shadow 0.28s ease,
+                  border-color 0.28s ease,
+                  background-color 0.28s ease;
+      cursor: default;
+    }
+
+    .flow-card:hover {
+      transform: translateY(-5px);
+      background: var(--card-bg-hover);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .flow-card:hover .flow-icon-box {
+      animation: iconSoftPulse 0.75s ease-in-out;
+    }
+
+    @keyframes iconSoftPulse {
+      0% { transform: scale(1); }
+      45% { transform: scale(1.12); }
+      100% { transform: scale(1); }
+    }
+
+    /* Pastel Tone Accents per Step */
+    .flow-card[data-tone="blue"] { border-top: 3px solid var(--blue-accent); }
+    .flow-card[data-tone="blue"]:hover { border-color: var(--blue-accent); }
+
+    .flow-card[data-tone="peach"] { border-top: 3px solid var(--orange-accent); }
+    .flow-card[data-tone="peach"]:hover { border-color: var(--orange-accent); }
+
+    .flow-card[data-tone="yellow"] { border-top: 3px solid var(--yellow-accent); }
+    .flow-card[data-tone="yellow"]:hover { border-color: var(--yellow-accent); }
+
+    .flow-card[data-tone="sky"] { border-top: 3px solid #0EA5E9; }
+    .flow-card[data-tone="sky"]:hover { border-color: #0EA5E9; }
+
+    .flow-card[data-tone="forensic"] {
+      border-top: 3px solid #EA580C;
+      background: linear-gradient(180deg, rgba(255, 241, 230, 0.55) 0%, rgba(255, 255, 255, 0.9) 100%);
+    }
+    .flow-card[data-tone="forensic"]:hover { border-color: #EA580C; }
+
+    .flow-card-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .flow-icon-box {
+      width: 38px;
+      height: 38px;
+      border-radius: 11px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: transform 0.25s ease;
+    }
+
+    .flow-card[data-tone="blue"] .flow-icon-box {
+      background: var(--blue-pastel);
+      color: var(--navy-deep);
+      border: 1px solid var(--blue-border);
+    }
+
+    .flow-card[data-tone="peach"] .flow-icon-box {
+      background: var(--orange-pastel);
+      color: #C2410C;
+      border: 1px solid var(--orange-border);
+    }
+
+    .flow-card[data-tone="yellow"] .flow-icon-box {
+      background: var(--yellow-pastel);
+      color: #A16207;
+      border: 1px solid var(--yellow-border);
+    }
+
+    .flow-card[data-tone="sky"] .flow-icon-box {
+      background: var(--blue-sky);
+      color: #0369A1;
+      border: 1px solid #BAE6FD;
+    }
+
+    .flow-card[data-tone="forensic"] .flow-icon-box {
+      background: var(--navy-deep);
+      color: #FFFFFF;
+      box-shadow: 0 4px 10px rgba(27, 58, 92, 0.22);
+    }
+
+    .flow-step-num {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 7px;
+      background: #F1F5F9;
+      color: var(--navy-mid);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .flow-card[data-tone="forensic"] .flow-step-num {
+      background: var(--orange-pastel);
+      color: #C2410C;
+      border: 1px solid var(--orange-border);
+    }
+
+    .flow-card-title {
+      font-family: var(--font-display);
+      font-size: clamp(14.5px, 1.1vw, 16.5px);
+      font-weight: 700;
+      color: var(--navy-deep);
+      line-height: 1.2;
+    }
+
+    .flow-card-desc {
+      font-size: clamp(11.8px, 0.88vw, 13px);
+      line-height: 1.44;
+      color: var(--navy-soft);
+    }
+
+    /* ==========================================================================
+       SECTION 2: TWO-COLUMN EDITORIAL ANALYSIS (KORBAN & KLASIFIKASI)
+    ========================================================================== */
+    .analysis-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: clamp(14px, 2vw, 24px);
+      flex: 1;
+      align-items: stretch;
+    }
+
+    @media (min-width: 900px) {
+      .analysis-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .editorial-panel {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 12px;
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      padding: clamp(14px, 1.8vh, 20px) clamp(16px, 1.8vw, 22px);
+      box-shadow: var(--shadow-soft);
+      transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+                  box-shadow 0.28s ease,
+                  border-color 0.28s ease;
+    }
+
+    .editorial-panel:hover {
+      box-shadow: var(--shadow-hover);
+      border-color: rgba(27, 58, 92, 0.16);
+    }
+
+    .editorial-panel--victims {
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.9) 0%, rgba(235, 244, 255, 0.55) 100%);
+      border-color: rgba(191, 219, 254, 0.75);
+    }
+
+    .editorial-panel--category {
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.9) 0%, rgba(254, 249, 231, 0.65) 100%);
+      border-color: rgba(253, 230, 138, 0.8);
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .panel-title-group {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .panel-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .panel-icon--blue {
+      background: var(--blue-pastel);
+      color: var(--navy-deep);
+      border: 1px solid var(--blue-border);
+    }
+
+    .panel-icon--yellow {
+      background: var(--yellow-pastel);
+      color: #B45309;
+      border: 1px solid var(--yellow-border);
+    }
+
+    .panel-title {
+      font-family: var(--font-display);
+      font-size: clamp(16px, 1.3vw, 19px);
+      font-weight: 700;
+      color: var(--navy-deep);
+    }
+
+    .panel-badge {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      padding: 3px 9px;
+      border-radius: var(--radius-pill);
+      background: rgba(255, 255, 255, 0.85);
+      border: 1px solid rgba(27, 58, 92, 0.1);
+      color: var(--navy-mid);
+    }
+
+    .panel-list {
+      display: flex;
+      flex-direction: column;
+      gap: clamp(8px, 1.1vh, 11px);
+      flex: 1;
+      justify-content: center;
+    }
+
+    .detail-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: clamp(9px, 1.1vh, 12px) 13px;
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.82);
+      border: 1px solid rgba(27, 58, 92, 0.08);
+      transition: transform 0.24s cubic-bezier(0.22, 1, 0.36, 1),
+                  border-color 0.24s ease,
+                  background-color 0.24s ease;
+    }
+
+    .detail-row:hover {
+      transform: translateX(4px);
+      background: #FFFFFF;
+      border-color: var(--blue-border);
+    }
+
+    .editorial-panel--category .detail-row:hover {
+      border-color: var(--yellow-border);
+    }
+
+    .detail-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .detail-icon--blue   { background: var(--blue-pastel); color: var(--navy-deep); }
+    .detail-icon--peach  { background: var(--orange-pastel); color: #C2410C; }
+    .detail-icon--sky    { background: var(--blue-sky); color: #0369A1; }
+    .detail-icon--yellow { background: var(--yellow-pastel); color: #A16207; }
+
+    .detail-text {
+      font-size: clamp(12.2px, 0.94vw, 13.8px);
+      line-height: 1.44;
+      color: var(--navy-soft);
+    }
+
+    .detail-text strong {
+      color: var(--navy-deep);
+      font-weight: 700;
+    }
+
+    /* Prominent Final Classification Highlight Card (Deep Navy + Warm Orange) */
+    .classification-highlight {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: clamp(11px, 1.3vh, 14px) 16px;
+      border-radius: var(--radius-md);
+      background: linear-gradient(125deg, var(--navy-deep) 0%, #244973 70%, #2C5282 100%);
+      color: #FFFFFF;
+      box-shadow: 0 10px 22px -8px rgba(27, 58, 92, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .classification-highlight::before {
+      content: '';
+      position: absolute;
+      right: -24px;
+      top: -24px;
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(249, 115, 22, 0.42) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .class-left {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .class-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: var(--orange-accent);
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 4px 12px rgba(249, 115, 22, 0.4);
+    }
+
+    .class-kicker {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #FED7AA;
+      margin-bottom: 1px;
+    }
+
+    .class-value {
+      font-family: var(--font-display);
+      font-size: clamp(14.5px, 1.15vw, 17px);
+      font-weight: 700;
+      color: #FFFFFF;
+      line-height: 1.2;
+    }
+
+    .class-pill {
+      position: relative;
+      z-index: 1;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      background: rgba(249, 115, 22, 0.22);
+      border: 1px solid rgba(253, 186, 116, 0.55);
+      color: #FFEDD5;
+      white-space: nowrap;
+    }
+
+    /* ==========================================================================
+       BOTTOM NAVIGATION BAR (FLOATING LIGHT PILL)
+    ========================================================================== */
+    .bottom-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding-top: 2px;
+    }
+
+    .shortcut-hints {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .kbd-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .kbd-chip {
+      padding: 2px 7px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(27, 58, 92, 0.14);
+      color: var(--navy-deep);
+      font-weight: 600;
+      font-size: 10.5px;
+    }
+
+    .nav-pill-group {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 5px;
+      border-radius: var(--radius-pill);
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid rgba(27, 58, 92, 0.12);
+      box-shadow: 0 10px 26px -8px rgba(27, 58, 92, 0.12);
+      backdrop-filter: blur(10px);
+      margin-left: auto;
+    }
+
+    .btn-pill-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      height: 38px;
+      padding: 0 13px;
+      border-radius: var(--radius-pill);
+      border: 1px solid transparent;
+      background: #F8FAFC;
+      color: var(--navy-mid);
+      font-family: var(--font-body);
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.22s ease;
+    }
+
+    .btn-pill-icon:hover {
+      background: var(--blue-pastel);
+      color: var(--navy-deep);
+      border-color: var(--blue-border);
+    }
+
+    .btn-pill-icon.is-paused {
+      background: var(--yellow-pastel);
+      color: #92400E;
+      border-color: var(--yellow-border);
+    }
+
+    .btn-prev-slide {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      height: 38px;
+      padding: 0 15px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--blue-border);
+      background: var(--blue-pastel);
+      color: var(--navy-deep);
+      font-family: var(--font-display);
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.24s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .btn-prev-slide:hover {
+      background: #DBEAFE;
+      transform: translateY(-1px);
+    }
+
+    .btn-prev-slide .arrow-left {
+      transition: transform 0.24s ease;
+    }
+
+    .btn-prev-slide:hover .arrow-left {
+      transform: translateX(-3px);
+    }
+
+    .btn-next-slide {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      height: 38px;
+      padding: 0 18px;
+      border-radius: var(--radius-pill);
+      border: none;
+      background: var(--navy-deep);
+      color: #FFFFFF;
+      font-family: var(--font-display);
+      font-size: 14.5px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      box-shadow: 0 6px 16px rgba(27, 58, 92, 0.22);
+      transition: background-color 0.26s ease,
+                  transform 0.24s cubic-bezier(0.22, 1, 0.36, 1),
+                  box-shadow 0.26s ease;
+    }
+
+    .btn-next-slide:hover {
+      background: var(--orange-accent);
+      transform: translateY(-1px);
+      box-shadow: 0 10px 22px rgba(249, 115, 22, 0.34);
+    }
+
+    .btn-next-slide .arrow-right {
+      transition: transform 0.24s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .btn-next-slide:hover .arrow-right {
+      transform: translateX(4px);
+    }
+
+    /* ==========================================================================
+       LAYERED PASTEL PAGE-TRANSITION CURTAINS (REVEAL & EXIT BOTH DIRECTIONS)
+    ========================================================================== */
+    .transition-curtains {
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .curtain-layer {
+      position: absolute;
+      inset: 0;
+      will-change: transform;
+    }
+
+    /* Initial state: covering viewport on load for smooth reveal continuing from index.html */
+    .curtain-layer--yellow {
+      background: #FEF9E7;
+      z-index: 1;
+      transform: translateX(0%);
+    }
+
+    .curtain-layer--orange {
+      background: #F97316;
+      z-index: 2;
+      transform: translateX(0%);
+    }
+
+    .curtain-layer--navy {
+      background: #1B3A5C;
+      z-index: 3;
+      transform: translateX(0%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #FCFBF8;
+      font-family: var(--font-display);
+      font-size: clamp(20px, 2.2vw, 28px);
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+
+    /* ==========================================================================
+       RESPONSIVE ADJUSTMENTS
+    ========================================================================== */
+    @media (max-width: 768px) {
+      .shortcut-hints {
+        display: none;
+      }
+      .nav-pill-group {
+        width: 100%;
+        justify-content: space-between;
+      }
+      .btn-pill-icon .btn-label {
+        display: none;
+      }
+      .classification-highlight {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Light Mode Pastel Background Layers -->
+  <div class="bg-base" aria-hidden="true"></div>
+  <canvas id="pastel-canvas" aria-hidden="true"></canvas>
+  <div class="bg-veil" aria-hidden="true"></div>
+
+  <!-- Main Presentation Stage -->
+  <main id="slide-stage">
+    <!-- HEADER -->
+    <header class="slide-header">
+      <div class="header-top-row">
+        <div class="category-pill">
+          <span class="pill-dot" aria-hidden="true"></span>
+          <span>SLIDE 02 &nbsp;|&nbsp; ANALISIS MODUS, KORBAN DAN KLASIFIKASI</span>
+        </div>
+        <div class="header-tag-right">ALPHABAY • OPERASI BAYONET</div>
+      </div>
+
+      <div class="title-wrap">
+        <h1 class="hero-title">
+          Alur Kejahatan, <span class="highlight-accent">Korban dan Kategori</span>
+        </h1>
+      </div>
+    </header>
+
+    <!-- BAGIAN UTAMA 1: ALUR KEJAHATAN DAN PELACAKAN (5 LANGKAH HORIZONTAL + SVG FLOW) -->
+    <section class="flow-section" aria-label="Alur Kejahatan dan Pelacakan">
+      <div class="section-label-row">
+        <div class="section-label">
+          <span class="section-label-bar" aria-hidden="true"></span>
+          <span>ALUR KEJAHATAN DAN PELACAKAN</span>
+        </div>
+        <span class="flow-hint">01 → 05 MODUS &amp; FORENSIK</span>
+      </div>
+
+      <div class="flow-stage" id="flow-stage">
+        <!-- SVG Animated Connector Line behind cards -->
+        <svg class="flow-svg-layer" id="flow-svg" aria-hidden="true">
+          <defs>
+            <linearGradient id="flow-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#3B82F6" />
+              <stop offset="35%" stop-color="#F97316" />
+              <stop offset="68%" stop-color="#EAB308" />
+              <stop offset="100%" stop-color="#1B3A5C" />
+            </linearGradient>
+          </defs>
+          <!-- Soft dashed background track -->
+          <path id="flow-track-bg" fill="none" stroke="rgba(27, 58, 92, 0.14)" stroke-width="3" stroke-dasharray="6 6" stroke-linecap="round" />
+          <!-- Animated progressive solid gradient line -->
+          <path id="flow-track-active" fill="none" stroke="url(#flow-grad)" stroke-width="3.5" stroke-linecap="round" />
+          <!-- Continuous subtle traveling pulse highlight -->
+          <path id="flow-track-pulse" fill="none" stroke="#F97316" stroke-width="4" stroke-linecap="round" opacity="0.85" />
+        </svg>
+
+        <div class="flow-grid" id="flow-grid">
+          <!-- Step 01 -->
+          <article class="flow-card js-flow-card" data-tone="blue">
+            <div class="flow-card-head">
+              <div class="flow-icon-box" aria-hidden="true">
+                <!-- Onion / Anonymous Network Icon -->
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="9"/>
+                  <circle cx="12" cy="12" r="5"/>
+                  <circle cx="12" cy="12" r="1.5" fill="currentColor"/>
+                </svg>
+              </div>
+              <span class="flow-step-num">01</span>
+            </div>
+            <h2 class="flow-card-title">Situs di Tor</h2>
+            <p class="flow-card-desc">Server tersembunyi dioperasikan di jaringan anonim Tor</p>
+          </article>
+
+          <!-- Step 02 -->
+          <article class="flow-card js-flow-card" data-tone="peach">
+            <div class="flow-card-head">
+              <div class="flow-icon-box" aria-hidden="true">
+                <!-- Prohibited Listing / Tag Icon -->
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20.59 13.41 13.42 20.58a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+                  <line x1="7" y1="7" x2="7.01" y2="7"/>
+                </svg>
+              </div>
+              <span class="flow-step-num">02</span>
+            </div>
+            <h2 class="flow-card-title">Listing ilegal</h2>
+            <p class="flow-card-desc">Narkoba, data curian, dokumen palsu, malware dipajang</p>
+          </article>
+
+          <!-- Step 03 -->
+          <article class="flow-card js-flow-card" data-tone="yellow">
+            <div class="flow-card-head">
+              <div class="flow-icon-box" aria-hidden="true">
+                <!-- Crypto / Coins Icon -->
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="9"/>
+                  <path d="M9.5 8.5h4a2 2 0 0 1 0 4h-4m0-4v7m0-3.5h4.5a2 2 0 0 1 0 4H9.5"/>
+                </svg>
+              </div>
+              <span class="flow-step-num">03</span>
+            </div>
+            <h2 class="flow-card-title">Pembayaran kripto</h2>
+            <p class="flow-card-desc">Bitcoin dan Monero menyamarkan identitas</p>
+          </article>
+
+          <!-- Step 04 -->
+          <article class="flow-card js-flow-card" data-tone="sky">
+            <div class="flow-card-head">
+              <div class="flow-icon-box" aria-hidden="true">
+                <!-- Impacted Users / Group Icon -->
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                  <circle cx="9" cy="7" r="4"/>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                </svg>
+              </div>
+              <span class="flow-step-num">04</span>
+            </div>
+            <h2 class="flow-card-title">Korban terdampak</h2>
+            <p class="flow-card-desc">Pemilik data, masyarakat, perusahaan</p>
+          </article>
+
+          <!-- Step 05 -->
+          <article class="flow-card js-flow-card" data-tone="forensic">
+            <div class="flow-card-head">
+              <div class="flow-icon-box" aria-hidden="true">
+                <!-- Forensics Search / Server Trace Icon -->
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="11" cy="11" r="7"/>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                  <path d="M8.5 11h5"/>
+                  <path d="M11 8.5v5"/>
+                </svg>
+              </div>
+              <span class="flow-step-num">05</span>
+            </div>
+            <h2 class="flow-card-title">Jejak forensik</h2>
+            <p class="flow-card-desc">Email pribadi admin terlacak lewat header pesan, server disita</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- BAGIAN UTAMA 2: 2 KOLOM SEJAJAR (PIHAK KORBAN & ALASAN MASUK KATEGORI) -->
+    <section class="analysis-grid" aria-label="Analisis Korban dan Klasifikasi">
+      <!-- KOLOM KIRI: PIHAK KORBAN -->
+      <article class="editorial-panel editorial-panel--victims js-panel-col">
+        <div class="panel-header">
+          <div class="panel-title-group">
+            <span class="panel-icon panel-icon--blue" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <line x1="19" y1="8" x2="19" y2="14"/>
+                <line x1="22" y1="11" x2="16" y2="11"/>
+              </svg>
+            </span>
+            <h2 class="panel-title">Pihak Korban</h2>
+          </div>
+          <span class="panel-badge">3 KELOMPOK TERDAMPAK</span>
+        </div>
+
+        <div class="panel-list">
+          <div class="detail-row js-detail-row">
+            <span class="detail-icon detail-icon--blue" aria-hidden="true">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="5" width="20" height="14" rx="2"/>
+                <line x1="2" y1="10" x2="22" y2="10"/>
+              </svg>
+            </span>
+            <p class="detail-text">
+              <strong>Pemilik identitas:</strong> korban pencurian data kartu kredit dan dokumen.
+            </p>
+          </div>
+
+          <div class="detail-row js-detail-row">
+            <span class="detail-icon detail-icon--peach" aria-hidden="true">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                <line x1="12" y1="8" x2="12" y2="12"/>
+                <line x1="12" y1="16" x2="12.01" y2="16"/>
+              </svg>
+            </span>
+            <p class="detail-text">
+              <strong>Masyarakat umum:</strong> terancam peredaran narkotika dan dokumen palsu.
+            </p>
+          </div>
+
+          <div class="detail-row js-detail-row">
+            <span class="detail-icon detail-icon--sky" aria-hidden="true">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2"/>
+                <path d="M9 3v18"/>
+                <path d="M13 8h4"/>
+                <path d="M13 12h4"/>
+                <path d="M13 16h4"/>
+              </svg>
+            </span>
+            <p class="detail-text">
+              <strong>Institusi:</strong> perusahaan jadi sasaran jual beli malware.
+            </p>
+          </div>
+        </div>
+      </article>
+
+      <!-- KOLOM KANAN: ALASAN MASUK KATEGORI -->
+      <article class="editorial-panel editorial-panel--category js-panel-col">
+        <div class="panel-header">
+          <div class="panel-title-group">
+            <span class="panel-icon panel-icon--yellow" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 2 7 12 12 22 7 12 2"/>
+                <polyline points="2 17 12 22 22 17"/>
+                <polyline points="2 12 12 17 22 12"/>
+              </svg>
+            </span>
+            <h2 class="panel-title">Alasan Masuk Kategori</h2>
+          </div>
+          <span class="panel-badge">JUSTIFIKASI KASUS</span>
+        </div>
+
+        <div class="panel-list">
+          <div class="detail-row js-detail-row">
+            <span class="detail-icon detail-icon--yellow" aria-hidden="true">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                <line x1="9" y1="14" x2="15" y2="14"/>
+              </svg>
+            </span>
+            <p class="detail-text">
+              <strong>Wadah terlarang:</strong> menampung katalog muatan yang melanggar hukum.
+            </p>
+          </div>
+
+          <div class="detail-row js-detail-row">
+            <span class="detail-icon detail-icon--peach" aria-hidden="true">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="18" cy="5" r="3"/>
+                <circle cx="6" cy="12" r="3"/>
+                <circle cx="18" cy="19" r="3"/>
+                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+                <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+              </svg>
+            </span>
+            <p class="detail-text">
+              <strong>Distribusi digital:</strong> memfasilitasi pertukaran data curian dan malware.
+            </p>
+          </div>
+
+          <!-- Highlight Pill / Card Klasifikasi Akhir -->
+          <div class="classification-highlight js-class-highlight">
+            <div class="class-left">
+              <span class="class-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                  <path d="m9 12 2 2 4-4"/>
+                </svg>
+              </span>
+              <div>
+                <div class="class-kicker">Klasifikasi Computer Crime</div>
+                <div class="class-value">Illegal Contents lintas negara</div>
+              </div>
+            </div>
+            <span class="class-pill">TRANSNATIONAL</span>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <!-- FLOATING BOTTOM PILL NAVIGATION -->
+    <footer class="bottom-bar">
+      <div class="shortcut-hints">
+        <span class="kbd-item"><span class="kbd-chip">←</span> Slide 01</span>
+        <span class="kbd-item"><span class="kbd-chip">R</span> Replay</span>
+        <span class="kbd-item"><span class="kbd-chip">Space</span> Pause / Play</span>
+        <span class="kbd-item"><span class="kbd-chip">→</span> Slide 03</span>
+      </div>
+
+      <div class="nav-pill-group">
+        <!-- Back to Slide 01 -->
+        <button type="button" id="btn-prev" class="btn-prev-slide" title="Kembali ke Slide 01 (Panah Kiri)">
+          <svg class="arrow-left" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 12H5"/>
+            <path d="m12 19-7-7 7-7"/>
+          </svg>
+          <span>Slide 01</span>
+        </button>
+
+        <!-- Replay Button -->
+        <button type="button" id="btn-replay" class="btn-pill-icon" title="Putar ulang animasi (R)">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 12a9 9 0 1 0 3-6.7L3 8"/>
+            <path d="M3 3v5h5"/>
+          </svg>
+          <span class="btn-label">Replay</span>
+        </button>
+
+        <!-- Pause / Play Button -->
+        <button type="button" id="btn-pause" class="btn-pill-icon" title="Jeda atau lanjutkan animasi (Space)">
+          <svg id="icon-pause" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="6" y="4" width="4" height="16" rx="1"/>
+            <rect x="14" y="4" width="4" height="16" rx="1"/>
+          </svg>
+          <svg id="icon-play" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+            <polygon points="6 4 20 12 6 20 6 4"/>
+          </svg>
+          <span class="btn-label" id="label-pause">Pause</span>
+        </button>
+
+        <!-- Next to Slide 03 -->
+        <button type="button" id="btn-next" class="btn-next-slide" title="Lanjut ke Slide 03 (Panah Kanan)">
+          <span>Slide 03</span>
+          <svg class="arrow-right" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12h14"/>
+            <path d="m12 5 7 7-7 7"/>
+          </svg>
+        </button>
+      </div>
+    </footer>
+  </main>
+
+  <!-- LAYERED PASTEL PAGE-TRANSITION CURTAINS -->
+  <div class="transition-curtains" aria-hidden="true">
+    <div class="curtain-layer curtain-layer--yellow" id="curtain-yellow"></div>
+    <div class="curtain-layer curtain-layer--orange" id="curtain-orange"></div>
+    <div class="curtain-layer curtain-layer--navy" id="curtain-navy">
+      <span id="curtain-label">Slide 02 — Analisis Kejahatan</span>
+    </div>
+  </div>
+
+  <script>
+    /**
+     * =========================================================================
+     * 1. DETERMINISTIC PASTEL GRADIENT ORBS + DOT GRID + TOR CONSTELLATION
+     *    Pure trigonometric motion driven by virtual elapsed time (no Math.random() / Date.now()).
+     * =========================================================================
+     */
+    (function initPastelBackground() {
+      const canvas = document.getElementById('pastel-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+
+      let width = 0;
+      let height = 0;
+      let dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+      // Soft pastel floating gradient orbs
+      const orbs = [
+        { cx: 0.14, cy: 0.22, r: 0.30, ax: 0.04, ay: 0.03, fx: 0.21, fy: 0.17, ph: 0.4, color: 'rgba(191, 219, 254, 0.42)' },
+        { cx: 0.85, cy: 0.24, r: 0.29, ax: 0.035, ay: 0.04, fx: 0.18, fy: 0.23, ph: 2.0, color: 'rgba(254, 249, 231, 0.58)' },
+        { cx: 0.78, cy: 0.82, r: 0.32, ax: 0.042, ay: 0.032, fx: 0.16, fy: 0.20, ph: 3.4, color: 'rgba(255, 241, 230, 0.56)' },
+        { cx: 0.22, cy: 0.80, r: 0.26, ax: 0.03, ay: 0.035, fx: 0.20, fy: 0.16, ph: 4.9, color: 'rgba(224, 242, 254, 0.38)' }
+      ];
+
+      // Deterministic geometric nodes (Tor / forensic network motif)
+      const NODE_COUNT = 22;
+      const nodes = [];
+      for (let i = 0; i < NODE_COUNT; i++) {
+        const golden = i * 2.399963229728653;
+        nodes.push({
+          baseX: 0.5 + Math.sin(golden * 1.18 + i * 0.41) * 0.45,
+          baseY: 0.5 + Math.cos(golden * 1.04 - i * 0.29) * 0.44,
+          ampX: 0.010 + (i % 4) * 0.0032,
+          ampY: 0.011 + (i % 5) * 0.0028,
+          freqX: 0.19 + (i % 6) * 0.032,
+          freqY: 0.16 + (i % 5) * 0.035,
+          phase: i * 0.88,
+          radius: (i % 5 === 0) ? 4.0 : 2.5,
+          tone: i % 3
+        });
+      }
+
+      function resizeCanvas() {
+        width = window.innerWidth;
+        height = window.innerHeight;
+        dpr = Math.min(window.devicePixelRatio || 1, 2);
+        canvas.width = Math.floor(width * dpr);
+        canvas.height = Math.floor(height * dpr);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+
+      window.addEventListener('resize', resizeCanvas);
+      resizeCanvas();
+
+      // Deterministic frame counter (fixed 60Hz step when active, paused cleanly on toggle)
+      let isCanvasPaused = false;
+      let virtualTime = 0;
+
+      window.__setBgPaused = function (paused) {
+        isCanvasPaused = paused;
+      };
+
+      function renderFrame() {
+        try {
+          if (!isCanvasPaused) {
+            virtualTime += 1 / 60;
+          }
+          const t = virtualTime;
+
+          ctx.clearRect(0, 0, width, height);
+
+          // A. Floating Pastel Gradient Orbs
+          const maxDim = Math.max(width, height);
+          const minDim = Math.min(width, height);
+          for (let i = 0; i < orbs.length; i++) {
+            const o = orbs[i];
+            const ox = (o.cx + Math.sin(t * o.fx + o.ph) * o.ax) * width;
+            const oy = (o.cy + Math.cos(t * o.fy + o.ph) * o.ay) * height;
+            const rad = o.r * maxDim;
+
+            const grad = ctx.createRadialGradient(ox, oy, rad * 0.05, ox, oy, rad);
+            grad.addColorStop(0, o.color);
+            grad.addColorStop(1, 'rgba(252, 251, 248, 0)');
+
+            ctx.fillStyle = grad;
+            ctx.beginPath();
+            ctx.arc(ox, oy, rad, 0, Math.PI * 2);
+            ctx.fill();
+          }
+
+          // B. Subtle Editorial Dot Grid
+          const dotGap = 42;
+          ctx.fillStyle = 'rgba(27, 58, 92, 0.07)';
+          const offsetX = (t * 3.8) % dotGap;
+          const offsetY = (t * 2.8) % dotGap;
+          for (let x = offsetX; x < width; x += dotGap) {
+            for (let y = offsetY; y < height; y += dotGap) {
+              ctx.beginPath();
+              ctx.arc(x, y, 1.1, 0, Math.PI * 2);
+              ctx.fill();
+            }
+          }
+
+          // C. Compute Deterministic Node Positions
+          const pts = nodes.map((n) => ({
+            x: (n.baseX + Math.sin(t * n.freqX + n.phase) * n.ampX) * width,
+            y: (n.baseY + Math.cos(t * n.freqY + n.phase) * n.ampY) * height,
+            r: n.radius,
+            tone: n.tone,
+            phase: n.phase
+          }));
+
+          // D. Connect Nearby Nodes & Animate Orange/Navy Signal Particles
+          const maxDist = minDim * 0.30;
+          for (let i = 0; i < pts.length; i++) {
+            for (let j = i + 1; j < pts.length; j++) {
+              const dx = pts[i].x - pts[j].x;
+              const dy = pts[i].y - pts[j].y;
+              const dist = Math.hypot(dx, dy);
+
+              if (dist < maxDist) {
+                const alpha = (1 - dist / maxDist) * 0.13;
+                ctx.strokeStyle = `rgba(44, 82, 130, ${alpha.toFixed(4)})`;
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(pts[i].x, pts[i].y);
+                ctx.lineTo(pts[j].x, pts[j].y);
+                ctx.stroke();
+
+                if ((i + j) % 4 === 0) {
+                  const prog = (t * 0.27 + i * 0.17) % 1;
+                  const px = pts[i].x + (pts[j].x - pts[i].x) * prog;
+                  const py = pts[i].y + (pts[j].y - pts[i].y) * prog;
+                  ctx.fillStyle = ((i + j) % 8 === 0)
+                    ? 'rgba(249, 115, 22, 0.56)'
+                    : 'rgba(27, 58, 92, 0.46)';
+                  ctx.beginPath();
+                  ctx.arc(px, py, 2.2, 0, Math.PI * 2);
+                  ctx.fill();
+                }
+              }
+            }
+          }
+
+          // E. Draw Nodes & Soft Concentric Signal Rings
+          for (let i = 0; i < pts.length; i++) {
+            const p = pts[i];
+            if (p.r > 3.5) {
+              const ringCycle = (t * 0.34 + p.phase * 0.2) % 1;
+              const ringRad = p.r + 4 + ringCycle * 22;
+              const ringAlpha = (1 - ringCycle) * 0.20;
+              ctx.strokeStyle = p.tone === 1
+                ? `rgba(249, 115, 22, ${ringAlpha.toFixed(4)})`
+                : `rgba(27, 58, 92, ${ringAlpha.toFixed(4)})`;
+              ctx.lineWidth = 1.2;
+              ctx.beginPath();
+              ctx.arc(p.x, p.y, ringRad, 0, Math.PI * 2);
+              ctx.stroke();
+            }
+
+            ctx.fillStyle = p.tone === 1
+              ? 'rgba(249, 115, 22, 0.42)'
+              : p.tone === 2
+                ? 'rgba(234, 179, 8, 0.45)'
+                : 'rgba(27, 58, 92, 0.28)';
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        } catch (err) {
+          // Graceful fallback
+        }
+
+        requestAnimationFrame(renderFrame);
+      }
+
+      requestAnimationFrame(renderFrame);
+    })();
+
+    /**
+     * =========================================================================
+     * 2. DYNAMIC SVG CONNECTOR LINE FOR 5-STEP HORIZONTAL FLOW
+     *    Calculates exact card midpoints on load & resize.
+     * =========================================================================
+     */
+    let flowPathLength = 1000;
+    let pulseTween = null;
+
+    function updateFlowSvgPath() {
+      try {
+        const stage = document.getElementById('flow-stage');
+        const svg = document.getElementById('flow-svg');
+        const trackBg = document.getElementById('flow-track-bg');
+        const trackActive = document.getElementById('flow-track-active');
+        const trackPulse = document.getElementById('flow-track-pulse');
+        const cards = document.querySelectorAll('.js-flow-card');
+
+        if (!stage || !svg || !trackBg || !trackActive || !trackPulse || cards.length < 2) return;
+
+        const stageRect = stage.getBoundingClientRect();
+        svg.setAttribute('viewBox', `0 0 ${stageRect.width} ${stageRect.height}`);
+
+        const firstRect = cards[0].getBoundingClientRect();
+        const lastRect = cards[cards.length - 1].getBoundingClientRect();
+
+        const startX = (firstRect.left - stageRect.left) + firstRect.width * 0.5;
+        const endX = (lastRect.left - stageRect.left) + lastRect.width * 0.5;
+        const midY = (firstRect.top - stageRect.top) + firstRect.height * 0.5;
+
+        const d = `M ${startX.toFixed(1)} ${midY.toFixed(1)} L ${endX.toFixed(1)} ${midY.toFixed(1)}`;
+        trackBg.setAttribute('d', d);
+        trackActive.setAttribute('d', d);
+        trackPulse.setAttribute('d', d);
+
+        flowPathLength = Math.max(trackActive.getTotalLength(), 10);
+        trackActive.style.strokeDasharray = `${flowPathLength}`;
+
+        // Configure continuous micro-pulse dash traveling along the connector
+        const pulseLen = 46;
+        trackPulse.style.strokeDasharray = `${pulseLen} ${flowPathLength}`;
+
+        if (pulseTween) pulseTween.kill();
+        pulseTween = gsap.fromTo(
+          trackPulse,
+          { strokeDashoffset: pulseLen },
+          {
+            strokeDashoffset: -(flowPathLength + pulseLen),
+            duration: 3.2,
+            ease: 'none',
+            repeat: -1
+          }
+        );
+      } catch (err) {
+        // Ignore if layout hidden
+      }
+    }
+
+    /**
+     * =========================================================================
+     * 3. GSAP 3 ENTRANCE CHOREOGRAPHY, PLAYBACK & TWO-WAY CURTAIN TRANSITIONS
+     * =========================================================================
+     */
+    let masterTL = null;
+    let isNavigating = false;
+
+    function updatePauseUI(paused) {
+      const btnPause = document.getElementById('btn-pause');
+      const iconPause = document.getElementById('icon-pause');
+      const iconPlay = document.getElementById('icon-play');
+      const labelPause = document.getElementById('label-pause');
+      if (!btnPause) return;
+
+      btnPause.classList.toggle('is-paused', paused);
+      iconPause.style.display = paused ? 'none' : 'block';
+      iconPlay.style.display = paused ? 'block' : 'none';
+      labelPause.textContent = paused ? 'Play' : 'Pause';
+
+      if (pulseTween) {
+        pulseTween.paused(paused);
+      }
+      if (typeof window.__setBgPaused === 'function') {
+        window.__setBgPaused(paused);
+      }
+    }
+
+    function buildEntranceTimeline(withRevealCurtain = true) {
+      if (masterTL) masterTL.kill();
+      updatePauseUI(false);
+      updateFlowSvgPath();
+
+      const trackActive = document.getElementById('flow-track-active');
+      const trackPulse = document.getElementById('flow-track-pulse');
+
+      masterTL = gsap.timeline({
+        defaults: { ease: 'power3.out' }
+      });
+
+      // Reset element start states
+      gsap.set('.category-pill, .header-tag-right', { y: -12, opacity: 0 });
+      gsap.set('.hero-title', { yPercent: 105, opacity: 0 });
+      gsap.set('.section-label-bar', { scaleX: 0 });
+      gsap.set('.section-label, .flow-hint', { opacity: 0, y: -8 });
+
+      gsap.set('.js-flow-card', { y: 24, opacity: 0, scale: 0.96 });
+      if (trackActive) {
+        gsap.set(trackActive, { strokeDashoffset: flowPathLength });
+      }
+      if (trackPulse) {
+        gsap.set(trackPulse, { opacity: 0 });
+      }
+
+      gsap.set('.js-panel-col', { y: 26, opacity: 0 });
+      gsap.set('.js-detail-row', { x: -14, opacity: 0 });
+      gsap.set('.js-class-highlight', { y: 14, opacity: 0, scale: 0.97 });
+      gsap.set('.bottom-bar', { y: 16, opacity: 0 });
+
+      let t0 = 0.05;
+
+      // 0. Optional Page-Load Reveal Curtain sweeping out to the left
+      if (withRevealCurtain) {
+        gsap.set('#curtain-navy, #curtain-orange, #curtain-yellow', { x: '0%' });
+        masterTL.to('#curtain-navy', { x: '-100%', duration: 0.44, ease: 'expo.inOut' }, 0.04);
+        masterTL.to('#curtain-orange', { x: '-100%', duration: 0.44, ease: 'expo.inOut' }, 0.12);
+        masterTL.to('#curtain-yellow', { x: '-100%', duration: 0.44, ease: 'expo.inOut' }, 0.20);
+        t0 = 0.34;
+      } else {
+        gsap.set('#curtain-navy, #curtain-orange, #curtain-yellow', { x: '-100%' });
+      }
+
+      // 1. Header & Title Reveal
+      masterTL.to('.category-pill, .header-tag-right', {
+        y: 0,
+        opacity: 1,
+        duration: 0.44,
+        stagger: 0.07
+      }, t0);
+
+      masterTL.to('.hero-title', {
+        yPercent: 0,
+        opacity: 1,
+        duration: 0.6,
+        ease: 'expo.out'
+      }, t0 + 0.08);
+
+      // 2. Section 1: 5-Step Flow + Progressive SVG Line
+      masterTL.to('.section-label, .flow-hint', {
+        opacity: 1,
+        y: 0,
+        duration: 0.38
+      }, t0 + 0.24);
+
+      masterTL.to('.section-label-bar', {
+        scaleX: 1,
+        duration: 0.42,
+        ease: 'power2.inOut'
+      }, t0 + 0.26);
+
+      masterTL.to('.js-flow-card', {
+        y: 0,
+        opacity: 1,
+        scale: 1,
+        duration: 0.48,
+        stagger: 0.13,
+        ease: 'back.out(1.25)'
+      }, t0 + 0.32);
+
+      if (trackActive) {
+        masterTL.to(trackActive, {
+          strokeDashoffset: 0,
+          duration: 0.95,
+          ease: 'power2.inOut'
+        }, t0 + 0.42);
+      }
+
+      if (trackPulse) {
+        masterTL.to(trackPulse, {
+          opacity: 0.85,
+          duration: 0.4
+        }, t0 + 1.28);
+      }
+
+      // 3. Section 2: 2 Parallel Editorial Columns
+      masterTL.to('.js-panel-col', {
+        y: 0,
+        opacity: 1,
+        duration: 0.55,
+        stagger: 0.15
+      }, t0 + 0.95);
+
+      masterTL.to('.js-detail-row', {
+        x: 0,
+        opacity: 1,
+        duration: 0.4,
+        stagger: 0.08
+      }, t0 + 1.15);
+
+      masterTL.to('.js-class-highlight', {
+        y: 0,
+        opacity: 1,
+        scale: 1,
+        duration: 0.48,
+        ease: 'back.out(1.5)'
+      }, t0 + 1.48);
+
+      // 4. Floating Pill Navigation
+      masterTL.to('.bottom-bar', {
+        y: 0,
+        opacity: 1,
+        duration: 0.45
+      }, t0 + 1.62);
+
+      return masterTL;
+    }
+
+    /**
+     * Toggle Pause / Play for GSAP timeline, SVG pulse, and background Canvas
+     */
+    function togglePause() {
+      if (isNavigating || !masterTL) return;
+      const nextState = !masterTL.paused();
+      masterTL.paused(nextState);
+      updatePauseUI(nextState);
+    }
+
+    /**
+     * Navigate to Slide 03 (index3.html):
+     * Layered pastel curtain sweeps RIGHT -> LEFT (Butter Yellow -> Orange -> Deep Navy)
+     */
+    function navigateToSlide3() {
+      if (isNavigating) return;
+      isNavigating = true;
+
+      if (masterTL && masterTL.paused()) {
+        masterTL.paused(false);
+        updatePauseUI(false);
+      }
+
+      const label = document.getElementById('curtain-label');
+      if (label) label.textContent = 'Slide 03 — Dampak, Etika & Pencegahan →';
+
+      // Position curtains offscreen to the right
+      gsap.set('#curtain-yellow, #curtain-orange, #curtain-navy', { x: '100%' });
+
+      const exitTL = gsap.timeline({
+        onComplete: () => {
+          window.location.href = 'index3.html';
+        }
+      });
+
+      exitTL.to('#slide-stage', {
+        x: -70,
+        opacity: 0.25,
+        duration: 0.4,
+        ease: 'power2.in'
+      }, 0);
+
+      exitTL.to('#curtain-yellow', { x: '0%', duration: 0.44, ease: 'expo.inOut' }, 0.02);
+      exitTL.to('#curtain-orange', { x: '0%', duration: 0.44, ease: 'expo.inOut' }, 0.10);
+      exitTL.to('#curtain-navy', { x: '0%', duration: 0.46, ease: 'expo.inOut' }, 0.18);
+    }
+
+    /**
+     * Navigate back to Slide 01 (index.html):
+     * Layered pastel curtain sweeps LEFT -> RIGHT (Deep Navy -> Orange -> Butter Yellow)
+     */
+    function navigateToSlide1() {
+      if (isNavigating) return;
+      isNavigating = true;
+
+      if (masterTL && masterTL.paused()) {
+        masterTL.paused(false);
+        updatePauseUI(false);
+      }
+
+      const label = document.getElementById('curtain-label');
+      if (label) label.textContent = '← Slide 01 — Identitas & Kronologi';
+
+      // Adjust stacking order so Navy leads, followed by Orange, then Butter Yellow
+      const cYellow = document.getElementById('curtain-yellow');
+      const cOrange = document.getElementById('curtain-orange');
+      const cNavy = document.getElementById('curtain-navy');
+      if (cYellow && cOrange && cNavy) {
+        cNavy.style.zIndex = '1';
+        cOrange.style.zIndex = '2';
+        cYellow.style.zIndex = '3';
+      }
+
+      // Position curtains offscreen to the left
+      gsap.set('#curtain-navy, #curtain-orange, #curtain-yellow', { x: '-100%' });
+
+      const exitTL = gsap.timeline({
+        onComplete: () => {
+          window.location.href = 'index.html';
+        }
+      });
+
+      exitTL.to('#slide-stage', {
+        x: 70,
+        opacity: 0.25,
+        duration: 0.4,
+        ease: 'power2.in'
+      }, 0);
+
+      exitTL.to('#curtain-navy', { x: '0%', duration: 0.44, ease: 'expo.inOut' }, 0.02);
+      exitTL.to('#curtain-orange', { x: '0%', duration: 0.44, ease: 'expo.inOut' }, 0.10);
+      exitTL.to('#curtain-yellow', { x: '0%', duration: 0.46, ease: 'expo.inOut' }, 0.18);
+    }
+
+    /**
+     * Start entrance choreography and wire interactions on window load
+     */
+    window.onload = function () {
+      try {
+        buildEntranceTimeline(true);
+
+        window.addEventListener('resize', updateFlowSvgPath);
+
+        const btnPrev = document.getElementById('btn-prev');
+        const btnReplay = document.getElementById('btn-replay');
+        const btnPause = document.getElementById('btn-pause');
+        const btnNext = document.getElementById('btn-next');
+
+        if (btnPrev) {
+          btnPrev.addEventListener('click', navigateToSlide1);
+        }
+
+        if (btnReplay) {
+          btnReplay.addEventListener('click', () => {
+            if (!isNavigating) {
+              buildEntranceTimeline(false);
+            }
+          });
+        }
+
+        if (btnPause) {
+          btnPause.addEventListener('click', togglePause);
+        }
+
+        if (btnNext) {
+          btnNext.addEventListener('click', navigateToSlide3);
+        }
+
+        // Keyboard shortcuts: ArrowLeft (Slide 01), R (Replay), Space (Pause/Play), ArrowRight (Slide 03)
+        window.addEventListener('keydown', (e) => {
+          if (isNavigating) return;
+
+          if (e.key === 'ArrowLeft') {
+            e.preventDefault();
+            navigateToSlide1();
+          } else if (e.key === 'r' || e.key === 'R') {
+            e.preventDefault();
+            buildEntranceTimeline(false);
+          } else if (e.code === 'Space') {
+            e.preventDefault();
+            togglePause();
+          } else if (e.key === 'ArrowRight') {
+            e.preventDefault();
+            navigateToSlide3();
+          }
+        });
+      } catch (err) {
+        // Fallback visibility if CDN is unavailable offline
+        const stage = document.getElementById('slide-stage');
+        if (stage) stage.style.opacity = '1';
+        document.querySelectorAll('.curtain-layer').forEach((el) => {
+          el.style.display = 'none';
+        });
+      }
+    };
+  </script>
+</body>
+</html>

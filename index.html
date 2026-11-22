@@ -1,0 +1,1546 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Slide 01 — Identitas dan Kronologi Operasi Bayonet | AlphaBay</title>
+
+  <!-- Google Fonts: Bricolage Grotesque (Display), Plus Jakarta Sans (Body), JetBrains Mono (Date/Tag) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=JetBrains+Mono:wght@500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- GSAP 3 Core CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+  <style>
+    /* ==========================================================================
+       DESIGN TOKENS — LIGHT MODE EDITORIAL PASTEL
+       Palette: Warm Ivory, Deep Slate Navy, Pastel Blue, Warm Orange/Peach, Butter Yellow
+    ========================================================================== */
+    :root {
+      --bg-ivory: #FCFBF8;
+      --bg-soft: #F8FAFC;
+
+      --navy-deep: #1B3A5C;
+      --navy-mid: #2C5282;
+      --navy-soft: #475569;
+      --text-muted: #64748B;
+
+      --blue-pastel: #E0F2FE;
+      --blue-border: #BAE6FD;
+
+      --orange-accent: #F97316;
+      --orange-pastel: #FFEDD5;
+      --orange-border: #FED7AA;
+
+      --yellow-accent: #EAB308;
+      --yellow-warm: #F59E0B;
+      --yellow-pastel: #FEF3C7;
+      --yellow-border: #FDE68A;
+
+      --card-bg: rgba(255, 255, 255, 0.88);
+      --card-bg-hover: rgba(255, 255, 255, 0.98);
+      --border-light: rgba(27, 58, 92, 0.1);
+
+      --shadow-soft: 0 10px 30px -10px rgba(27, 58, 92, 0.08), 0 4px 12px -4px rgba(27, 58, 92, 0.04);
+      --shadow-hover: 0 18px 36px -12px rgba(27, 58, 92, 0.14), 0 6px 16px -6px rgba(249, 115, 22, 0.12);
+
+      --font-display: 'Bricolage Grotesque', sans-serif;
+      --font-body: 'Plus Jakarta Sans', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --radius-pill: 999px;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      background-color: var(--bg-ivory);
+      color: var(--navy-deep);
+      font-family: var(--font-body);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Keep desktop 16:9 presentation crisp inside viewport without unnecessary scrolling */
+    @media (min-width: 1024px) and (min-height: 680px) {
+      body {
+        overflow: hidden;
+      }
+    }
+
+    /* ==========================================================================
+       BACKGROUND LAYERS (WARM IVORY GRADIENT + DETERMINISTIC PASTEL CANVAS)
+    ========================================================================== */
+    .bg-base {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 12% 16%, rgba(224, 242, 254, 0.65) 0%, transparent 45%),
+        radial-gradient(circle at 88% 18%, rgba(254, 243, 199, 0.6) 0%, transparent 42%),
+        radial-gradient(circle at 82% 86%, rgba(255, 237, 213, 0.65) 0%, transparent 46%),
+        linear-gradient(160deg, #FCFBF8 0%, #F8FAFC 100%);
+    }
+
+    #pastel-canvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    /* Gentle luminous veil to ensure 100% text contrast over animated canvas */
+    .bg-veil {
+      position: fixed;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+      background: radial-gradient(
+        ellipse at 50% 48%,
+        rgba(252, 251, 248, 0.42) 0%,
+        rgba(252, 251, 248, 0.1) 100%
+      );
+    }
+
+    /* ==========================================================================
+       MAIN STAGE LAYOUT
+    ========================================================================== */
+    #slide-stage {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      min-height: 100vh;
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: clamp(18px, 2.5vh, 30px) clamp(20px, 3.2vw, 48px);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: clamp(14px, 2vh, 22px);
+      will-change: transform, opacity;
+    }
+
+    /* ==========================================================================
+       TOP BAR & EDITORIAL HEADER
+    ========================================================================== */
+    .slide-header {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .header-top-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .category-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 6px 14px;
+      border-radius: var(--radius-pill);
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid var(--blue-border);
+      box-shadow: 0 4px 12px rgba(27, 58, 92, 0.05);
+      font-family: var(--font-mono);
+      font-size: clamp(10.5px, 0.8vw, 12px);
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      color: var(--navy-mid);
+    }
+
+    .pill-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--orange-accent);
+      box-shadow: 0 0 0 3px var(--orange-pastel);
+      flex-shrink: 0;
+    }
+
+    .header-tag-right {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: var(--radius-pill);
+      background: var(--yellow-pastel);
+      border: 1px solid var(--yellow-border);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      color: #92400E;
+    }
+
+    .title-wrap {
+      overflow: hidden;
+      padding-bottom: 2px;
+    }
+
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(30px, 3.6vw, 48px);
+      font-weight: 800;
+      line-height: 1.06;
+      letter-spacing: -0.02em;
+      color: var(--navy-deep);
+    }
+
+    .hero-title .highlight-accent {
+      position: relative;
+      display: inline-block;
+      color: var(--navy-deep);
+      z-index: 1;
+    }
+
+    .hero-title .highlight-accent::after {
+      content: '';
+      position: absolute;
+      left: -3px;
+      right: -3px;
+      bottom: 4px;
+      height: 11px;
+      background: linear-gradient(90deg, var(--yellow-border), var(--orange-border));
+      border-radius: 6px;
+      z-index: -1;
+      opacity: 0.82;
+    }
+
+    .subtitle-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .subtitle-accent-bar {
+      width: 42px;
+      height: 3.5px;
+      border-radius: 99px;
+      background: linear-gradient(90deg, var(--navy-deep), var(--orange-accent), var(--yellow-accent));
+      transform-origin: left center;
+      flex-shrink: 0;
+    }
+
+    .hero-subtitle {
+      font-size: clamp(13.5px, 1.15vw, 16.5px);
+      font-weight: 500;
+      color: var(--navy-soft);
+    }
+
+    /* ==========================================================================
+       MAIN 2-COLUMN BALANCED LAYOUT
+    ========================================================================== */
+    .content-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: clamp(18px, 2.4vw, 32px);
+      align-items: stretch;
+      flex: 1;
+    }
+
+    @media (min-width: 980px) {
+      .content-grid {
+        grid-template-columns: 40% 1fr;
+      }
+    }
+
+    /* ==========================================================================
+       LEFT COLUMN: CASE IDENTITY & OFFICIAL SOURCES
+    ========================================================================== */
+    .left-col {
+      display: flex;
+      flex-direction: column;
+      gap: clamp(14px, 1.8vh, 20px);
+      justify-content: space-between;
+    }
+
+    .light-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      padding: clamp(16px, 2vh, 22px);
+      box-shadow: var(--shadow-soft);
+      transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+                  box-shadow 0.28s ease,
+                  border-color 0.28s ease,
+                  background-color 0.28s ease;
+    }
+
+    .light-card:hover {
+      background: var(--card-bg-hover);
+      box-shadow: var(--shadow-hover);
+      border-color: rgba(27, 58, 92, 0.18);
+    }
+
+    .card-kicker {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 13px;
+    }
+
+    .card-kicker-title {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-display);
+      font-size: clamp(15px, 1.15vw, 17px);
+      font-weight: 700;
+      color: var(--navy-deep);
+    }
+
+    .kicker-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 9px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--blue-pastel);
+      color: var(--navy-deep);
+    }
+
+    .kicker-icon--orange {
+      background: var(--orange-pastel);
+      color: #C2410C;
+    }
+
+    .kicker-badge {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      font-weight: 600;
+      padding: 3px 9px;
+      border-radius: var(--radius-pill);
+      background: #F1F5F9;
+      color: var(--navy-mid);
+    }
+
+    /* 3 Distinct Pastel Info Blocks (Blue, Orange, Yellow) */
+    .identity-blocks {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .info-block {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      padding: 11px 14px;
+      border-radius: var(--radius-md);
+      border: 1px solid transparent;
+      transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.25s ease;
+    }
+
+    .info-block:hover {
+      transform: translateX(4px);
+    }
+
+    .info-block--blue {
+      background: var(--blue-pastel);
+      border-color: var(--blue-border);
+    }
+
+    .info-block--orange {
+      background: var(--orange-pastel);
+      border-color: var(--orange-border);
+    }
+
+    .info-block--yellow {
+      background: var(--yellow-pastel);
+      border-color: var(--yellow-border);
+    }
+
+    .info-block-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.85);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 2px 6px rgba(27, 58, 92, 0.06);
+    }
+
+    .info-block--blue .info-block-icon   { color: var(--navy-deep); }
+    .info-block--orange .info-block-icon { color: #EA580C; }
+    .info-block--yellow .info-block-icon { color: #B45309; }
+
+    .info-block-label {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--navy-soft);
+      margin-bottom: 2px;
+    }
+
+    .info-block-value {
+      font-size: clamp(14px, 1.1vw, 16px);
+      font-weight: 700;
+      color: var(--navy-deep);
+      line-height: 1.25;
+    }
+
+    /* Official Sources List */
+    .sources-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .source-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 11px 13px;
+      border-radius: var(--radius-md);
+      background: rgba(248, 250, 252, 0.92);
+      border: 1px solid rgba(27, 58, 92, 0.09);
+      transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+    }
+
+    .source-item:hover {
+      transform: translateY(-2px);
+      background: #FFFFFF;
+      border-color: var(--orange-border);
+      box-shadow: 0 6px 16px rgba(249, 115, 22, 0.08);
+    }
+
+    .source-check {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--navy-deep), var(--navy-mid));
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .source-check--alt {
+      background: linear-gradient(135deg, var(--orange-accent), var(--yellow-warm));
+    }
+
+    .source-org {
+      font-size: clamp(13.5px, 1.05vw, 15px);
+      font-weight: 700;
+      color: var(--navy-deep);
+      margin-bottom: 2px;
+    }
+
+    .source-desc {
+      font-size: clamp(12px, 0.9vw, 13.5px);
+      line-height: 1.42;
+      color: var(--navy-soft);
+    }
+
+    /* ==========================================================================
+       RIGHT COLUMN: ANIMATED VERTICAL GRADIENT TIMELINE
+    ========================================================================== */
+    .right-col {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .timeline-header-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      padding-left: 36px;
+    }
+
+    .timeline-heading {
+      font-family: var(--font-display);
+      font-size: clamp(15px, 1.2vw, 18px);
+      font-weight: 700;
+      color: var(--navy-deep);
+    }
+
+    .timeline-count-pill {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--navy-mid);
+      background: var(--blue-pastel);
+      border: 1px solid var(--blue-border);
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+    }
+
+    .timeline-wrapper {
+      position: relative;
+      padding-left: 36px;
+      display: flex;
+      flex-direction: column;
+      gap: clamp(10px, 1.4vh, 15px);
+    }
+
+    /* Dormant soft track */
+    .timeline-line-bg {
+      position: absolute;
+      left: 12px;
+      top: 18px;
+      bottom: 18px;
+      width: 3px;
+      border-radius: 99px;
+      background: rgba(27, 58, 92, 0.1);
+    }
+
+    /* Animated gradient track: Deep Navy -> Warm Orange -> Warm Yellow */
+    .timeline-line-fill {
+      position: absolute;
+      left: 11px;
+      top: 18px;
+      bottom: 18px;
+      width: 5px;
+      border-radius: 99px;
+      background: linear-gradient(
+        180deg,
+        var(--navy-deep) 0%,
+        var(--navy-mid) 30%,
+        var(--orange-accent) 66%,
+        var(--yellow-accent) 100%
+      );
+      transform-origin: top center;
+      transform: scaleY(0);
+    }
+
+    .timeline-step {
+      position: relative;
+      display: flex;
+      align-items: stretch;
+    }
+
+    /* Colored Stage Indicator Dot */
+    .step-dot {
+      position: absolute;
+      left: -32px;
+      top: 50%;
+      transform: translateY(-50%) scale(0);
+      width: 17px;
+      height: 17px;
+      border-radius: 50%;
+      background: #FFFFFF;
+      border: 4px solid var(--navy-deep);
+      box-shadow: 0 0 0 4px rgba(224, 242, 254, 0.9);
+      z-index: 2;
+    }
+
+    .timeline-step[data-tone="orange"] .step-dot {
+      border-color: var(--orange-accent);
+      box-shadow: 0 0 0 4px rgba(255, 237, 213, 0.95);
+    }
+
+    .timeline-step[data-tone="yellow"] .step-dot {
+      border-color: var(--yellow-warm);
+      box-shadow: 0 0 0 4px rgba(254, 243, 199, 0.95);
+    }
+
+    .timeline-step[data-tone="navy-final"] .step-dot {
+      border-color: var(--navy-mid);
+      box-shadow: 0 0 0 4px rgba(186, 230, 253, 0.9);
+    }
+
+    /* Timeline Content Card */
+    .step-card {
+      width: 100%;
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-md);
+      padding: clamp(12px, 1.45vh, 16px) clamp(15px, 1.6vw, 20px);
+      box-shadow: var(--shadow-soft);
+      transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+                  border-color 0.28s ease,
+                  box-shadow 0.28s ease,
+                  background-color 0.28s ease;
+    }
+
+    .step-card:hover {
+      transform: translateY(-3px) translateX(3px);
+      background: var(--card-bg-hover);
+      border-color: var(--navy-mid);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .timeline-step[data-tone="orange"] .step-card:hover {
+      border-color: var(--orange-accent);
+    }
+
+    .timeline-step[data-tone="yellow"] .step-card:hover {
+      border-color: var(--yellow-warm);
+    }
+
+    .step-card-top {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 9px;
+      margin-bottom: 5px;
+    }
+
+    .step-date {
+      font-family: var(--font-mono);
+      font-size: clamp(11px, 0.88vw, 12.5px);
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 8px;
+      background: var(--blue-pastel);
+      color: var(--navy-deep);
+      border: 1px solid var(--blue-border);
+    }
+
+    .timeline-step[data-tone="orange"] .step-date {
+      background: var(--orange-pastel);
+      color: #C2410C;
+      border-color: var(--orange-border);
+    }
+
+    .timeline-step[data-tone="yellow"] .step-date {
+      background: var(--yellow-pastel);
+      color: #92400E;
+      border-color: var(--yellow-border);
+    }
+
+    .timeline-step[data-tone="navy-final"] .step-date {
+      background: var(--navy-deep);
+      color: #FFFFFF;
+      border-color: var(--navy-deep);
+    }
+
+    .step-title {
+      font-family: var(--font-display);
+      font-size: clamp(15.5px, 1.25vw, 18.5px);
+      font-weight: 700;
+      color: var(--navy-deep);
+    }
+
+    .step-num {
+      margin-left: auto;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .step-desc {
+      font-size: clamp(12.5px, 0.96vw, 14.2px);
+      line-height: 1.48;
+      color: var(--navy-soft);
+    }
+
+    /* ==========================================================================
+       BOTTOM NAVIGATION BAR (MINIMALIST LIGHT PILL STYLE)
+    ========================================================================== */
+    .bottom-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding-top: 4px;
+    }
+
+    .shortcut-hints {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .kbd-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .kbd-chip {
+      padding: 2px 7px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(27, 58, 92, 0.14);
+      color: var(--navy-deep);
+      font-weight: 600;
+      font-size: 10.5px;
+    }
+
+    .nav-pill-group {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px;
+      border-radius: var(--radius-pill);
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid rgba(27, 58, 92, 0.12);
+      box-shadow: 0 10px 26px -8px rgba(27, 58, 92, 0.12);
+      backdrop-filter: blur(10px);
+      margin-left: auto;
+    }
+
+    .btn-pill-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      height: 40px;
+      padding: 0 14px;
+      border-radius: var(--radius-pill);
+      border: 1px solid transparent;
+      background: #F8FAFC;
+      color: var(--navy-mid);
+      font-family: var(--font-body);
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.22s ease;
+    }
+
+    .btn-pill-icon:hover {
+      background: var(--blue-pastel);
+      color: var(--navy-deep);
+      border-color: var(--blue-border);
+    }
+
+    .btn-pill-icon.is-paused {
+      background: var(--yellow-pastel);
+      color: #92400E;
+      border-color: var(--yellow-border);
+    }
+
+    /* Primary Next Slide Button: Deep Slate Navy with Warm Orange Hover */
+    .btn-next-slide {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      height: 40px;
+      padding: 0 20px;
+      border-radius: var(--radius-pill);
+      border: none;
+      background: var(--navy-deep);
+      color: #FFFFFF;
+      font-family: var(--font-display);
+      font-size: 15.5px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      box-shadow: 0 6px 16px rgba(27, 58, 92, 0.24);
+      transition: background-color 0.28s ease,
+                  transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+                  box-shadow 0.28s ease;
+    }
+
+    .btn-next-slide:hover {
+      background: var(--orange-accent);
+      transform: translateY(-1px);
+      box-shadow: 0 10px 22px rgba(249, 115, 22, 0.34);
+    }
+
+    .btn-next-slide:active {
+      transform: translateY(0) scale(0.98);
+    }
+
+    .btn-next-slide .arrow-svg {
+      transition: transform 0.26s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .btn-next-slide:hover .arrow-svg {
+      transform: translateX(4px);
+    }
+
+    /* ==========================================================================
+       LAYERED PASTEL PAGE-TRANSITION CURTAINS (NAVY -> ORANGE -> BUTTER YELLOW)
+    ========================================================================== */
+    .transition-curtains {
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .curtain-layer {
+      position: absolute;
+      inset: 0;
+      transform: translateX(100%);
+      will-change: transform;
+    }
+
+    .curtain-layer--yellow {
+      background: #FEF3C7;
+      z-index: 1;
+    }
+
+    .curtain-layer--orange {
+      background: #F97316;
+      z-index: 2;
+    }
+
+    .curtain-layer--navy {
+      background: #1B3A5C;
+      z-index: 3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #FCFBF8;
+      font-family: var(--font-display);
+      font-size: clamp(20px, 2.2vw, 28px);
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+
+    /* ==========================================================================
+       RESPONSIVE TWEAKS
+    ========================================================================== */
+    @media (max-width: 768px) {
+      .shortcut-hints {
+        display: none;
+      }
+      .timeline-header-bar {
+        padding-left: 0;
+      }
+      .nav-pill-group {
+        width: 100%;
+        justify-content: space-between;
+      }
+      .btn-pill-icon span.btn-label {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Light Mode Pastel Background Layers -->
+  <div class="bg-base" aria-hidden="true"></div>
+  <canvas id="pastel-canvas" aria-hidden="true"></canvas>
+  <div class="bg-veil" aria-hidden="true"></div>
+
+  <!-- Main Presentation Stage -->
+  <main id="slide-stage">
+    <!-- TOP BAR & EDITORIAL HEADER -->
+    <header class="slide-header">
+      <div class="header-top-row">
+        <div class="category-pill">
+          <span class="pill-dot" aria-hidden="true"></span>
+          <span>SLIDE 01 • INVESTIGASI KEJAHATAN KOMPUTER • ILLEGAL CONTENTS</span>
+        </div>
+        <div class="header-tag-right">OPERASI BAYONET • 2017</div>
+      </div>
+
+      <div class="title-wrap">
+        <h1 class="hero-title">
+          Identitas &amp; Kronologi <span class="highlight-accent">Operasi Bayonet</span>
+        </h1>
+      </div>
+
+      <div class="subtitle-row">
+        <span class="subtitle-accent-bar" aria-hidden="true"></span>
+        <p class="hero-subtitle">Tinjauan Penutupan Dark Market AlphaBay di Jaringan Tor</p>
+      </div>
+    </header>
+
+    <!-- MAIN 2-COLUMN BALANCED CONTENT -->
+    <section class="content-grid" aria-label="Konten Slide 01">
+      <!-- LEFT COLUMN: IDENTITAS KASUS & SUMBER RESMI -->
+      <div class="left-col">
+        <!-- Kartu 1: Identitas Kasus (3 Blok Pastel: Biru, Oren, Kuning) -->
+        <article class="light-card js-card-left">
+          <div class="card-kicker">
+            <h2 class="card-kicker-title">
+              <span class="kicker-icon" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                  <polyline points="14 2 14 8 20 8"/>
+                  <line x1="16" y1="13" x2="8" y2="13"/>
+                  <line x1="16" y1="17" x2="8" y2="17"/>
+                </svg>
+              </span>
+              Identitas Kasus
+            </h2>
+            <span class="kicker-badge">CASE PROFILE</span>
+          </div>
+
+          <div class="identity-blocks">
+            <!-- Pastel Blue Block -->
+            <div class="info-block info-block--blue js-info-block">
+              <div class="info-block-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+              </div>
+              <div>
+                <div class="info-block-label">Nama Kasus</div>
+                <div class="info-block-value">Penutupan Dark Market AlphaBay</div>
+              </div>
+            </div>
+
+            <!-- Pastel Orange / Peach Block -->
+            <div class="info-block info-block--orange js-info-block">
+              <div class="info-block-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                  <line x1="16" y1="2" x2="16" y2="6"/>
+                  <line x1="8" y1="2" x2="8" y2="6"/>
+                  <line x1="3" y1="10" x2="21" y2="10"/>
+                </svg>
+              </div>
+              <div>
+                <div class="info-block-label">Tahun</div>
+                <div class="info-block-value">2014 sampai Juli 2017</div>
+              </div>
+            </div>
+
+            <!-- Pastel Butter Yellow Block -->
+            <div class="info-block info-block--yellow js-info-block">
+              <div class="info-block-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                  <circle cx="12" cy="10" r="3"/>
+                </svg>
+              </div>
+              <div>
+                <div class="info-block-label">Lokasi</div>
+                <div class="info-block-value">Thailand, AS dan Eropa</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Kartu 2: Dua Sumber Resmi Terpercaya -->
+        <article class="light-card js-card-left">
+          <div class="card-kicker">
+            <h2 class="card-kicker-title">
+              <span class="kicker-icon kicker-icon--orange" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                  <path d="m9 12 2 2 4-4"/>
+                </svg>
+              </span>
+              Dua Sumber Resmi Terpercaya
+            </h2>
+            <span class="kicker-badge">VERIFIED</span>
+          </div>
+
+          <div class="sources-stack">
+            <div class="source-item js-source-item">
+              <div class="source-check" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20 6 9 17l-5-5"/>
+                </svg>
+              </div>
+              <div>
+                <div class="source-org">1. U.S. Department of Justice</div>
+                <div class="source-desc">Siaran pers penutupan AlphaBay (20 Juli 2017)</div>
+              </div>
+            </div>
+
+            <div class="source-item js-source-item">
+              <div class="source-check source-check--alt" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20 6 9 17l-5-5"/>
+                </svg>
+              </div>
+              <div>
+                <div class="source-org">2. Europol</div>
+                <div class="source-desc">Laporan koordinasi penindakan dark web AlphaBay dan Hansa (20 Juli 2017)</div>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <!-- RIGHT COLUMN: KRONOLOGI 4 TAHAP DENGAN TIMELINE BERANIMASI -->
+      <div class="right-col">
+        <div class="timeline-header-bar">
+          <h2 class="timeline-heading">Kronologi Penindakan</h2>
+          <span class="timeline-count-pill">4 TAHAP UTAMA</span>
+        </div>
+
+        <div class="timeline-wrapper">
+          <div class="timeline-line-bg" aria-hidden="true"></div>
+          <div class="timeline-line-fill" aria-hidden="true"></div>
+
+          <!-- Tahap 1 -->
+          <div class="timeline-step" data-tone="blue">
+            <div class="step-dot" aria-hidden="true"></div>
+            <div class="step-card">
+              <div class="step-card-top">
+                <span class="step-date">2014 sampai 2016</span>
+                <h3 class="step-title">Pertumbuhan pasar gelap</h3>
+                <span class="step-num">01/04</span>
+              </div>
+              <p class="step-desc">
+                AlphaBay berkembang di jaringan Tor, mencapai sekitar 200 ribu pengguna dan 40 ribu penjual menurut Europol.
+              </p>
+            </div>
+          </div>
+
+          <!-- Tahap 2 -->
+          <div class="timeline-step" data-tone="orange">
+            <div class="step-dot" aria-hidden="true"></div>
+            <div class="step-card">
+              <div class="step-card-top">
+                <span class="step-date">5 Juli 2017</span>
+                <h3 class="step-title">Penangkapan administrator</h3>
+                <span class="step-num">02/04</span>
+              </div>
+              <p class="step-desc">
+                Alexandre Cazes, pendiri yang diduga, ditangkap otoritas Thailand di Bangkok atas permintaan AS, saat masih login sebagai admin situs.
+              </p>
+            </div>
+          </div>
+
+          <!-- Tahap 3 -->
+          <div class="timeline-step" data-tone="yellow">
+            <div class="step-dot" aria-hidden="true"></div>
+            <div class="step-card">
+              <div class="step-card-top">
+                <span class="step-date">12 Juli 2017</span>
+                <h3 class="step-title">Tersangka meninggal</h3>
+                <span class="step-num">03/04</span>
+              </div>
+              <p class="step-desc">
+                Cazes ditemukan meninggal di tahanan sebelum diadili, sehingga tidak ada putusan pengadilan.
+              </p>
+            </div>
+          </div>
+
+          <!-- Tahap 4 -->
+          <div class="timeline-step" data-tone="navy-final">
+            <div class="step-dot" aria-hidden="true"></div>
+            <div class="step-card">
+              <div class="step-card-top">
+                <span class="step-date">20 Juli 2017</span>
+                <h3 class="step-title">Penyitaan infrastruktur global</h3>
+                <span class="step-num">04/04</span>
+              </div>
+              <p class="step-desc">
+                AS dan Eropa mengumumkan penyitaan AlphaBay dan pengambilalihan Hansa Market, situs ditutup permanen.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BOTTOM MINIMALIST PILL NAVIGATION -->
+    <footer class="bottom-bar">
+      <div class="shortcut-hints">
+        <span class="kbd-item"><span class="kbd-chip">R</span> Replay</span>
+        <span class="kbd-item"><span class="kbd-chip">Space</span> Pause / Play</span>
+        <span class="kbd-item"><span class="kbd-chip">→</span> Slide 02</span>
+      </div>
+
+      <div class="nav-pill-group">
+        <!-- Replay Button -->
+        <button type="button" id="btn-replay" class="btn-pill-icon" title="Putar ulang animasi (R)">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 12a9 9 0 1 0 3-6.7L3 8"/>
+            <path d="M3 3v5h5"/>
+          </svg>
+          <span class="btn-label">Replay</span>
+        </button>
+
+        <!-- Pause / Play Button -->
+        <button type="button" id="btn-pause" class="btn-pill-icon" title="Jeda atau lanjutkan animasi (Space)">
+          <svg id="icon-pause" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="6" y="4" width="4" height="16" rx="1"/>
+            <rect x="14" y="4" width="4" height="16" rx="1"/>
+          </svg>
+          <svg id="icon-play" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+            <polygon points="6 4 20 12 6 20 6 4"/>
+          </svg>
+          <span class="btn-label" id="label-pause">Pause</span>
+        </button>
+
+        <!-- Primary Next Slide Arrow Button -->
+        <button type="button" id="btn-next" class="btn-next-slide" title="Lanjut ke Slide 02 (Panah Kanan)">
+          <span>Slide 02</span>
+          <svg class="arrow-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12h14"/>
+            <path d="m12 5 7 7-7 7"/>
+          </svg>
+        </button>
+      </div>
+    </footer>
+  </main>
+
+  <!-- LAYERED PASTEL PAGE-TRANSITION CURTAINS -->
+  <div class="transition-curtains" aria-hidden="true">
+    <div class="curtain-layer curtain-layer--yellow" id="curtain-yellow"></div>
+    <div class="curtain-layer curtain-layer--orange" id="curtain-orange"></div>
+    <div class="curtain-layer curtain-layer--navy" id="curtain-navy">
+      <span>Slide 02 — Analisis Kejahatan →</span>
+    </div>
+  </div>
+
+  <script>
+    /**
+     * =========================================================================
+     * 1. DETERMINISTIC PASTEL GRADIENT ORBS + DOT GRID + LIGHT TOR NETWORK
+     *    Pure trigonometric functions driven by elapsed time (no Math.random()).
+     * =========================================================================
+     */
+    (function initPastelBackground() {
+      const canvas = document.getElementById('pastel-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+
+      let width = 0;
+      let height = 0;
+      let dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+      // Soft pastel floating orbs (Blue, Peach/Orange, Butter Yellow)
+      const orbs = [
+        { cx: 0.16, cy: 0.24, r: 0.30, ax: 0.04, ay: 0.03, fx: 0.22, fy: 0.18, ph: 0.0, color: 'rgba(186, 230, 253, 0.42)' },
+        { cx: 0.84, cy: 0.26, r: 0.28, ax: 0.035, ay: 0.04, fx: 0.19, fy: 0.24, ph: 1.7, color: 'rgba(254, 243, 199, 0.50)' },
+        { cx: 0.78, cy: 0.80, r: 0.32, ax: 0.045, ay: 0.03, fx: 0.17, fy: 0.21, ph: 3.1, color: 'rgba(255, 237, 213, 0.52)' },
+        { cx: 0.24, cy: 0.78, r: 0.26, ax: 0.03, ay: 0.035, fx: 0.21, fy: 0.16, ph: 4.5, color: 'rgba(224, 242, 254, 0.36)' }
+      ];
+
+      // Deterministic Tor relay nodes for light editorial network motif
+      const NODE_COUNT = 20;
+      const nodes = [];
+      for (let i = 0; i < NODE_COUNT; i++) {
+        const golden = i * 2.399963229728653;
+        nodes.push({
+          baseX: 0.5 + Math.sin(golden * 1.25 + i * 0.38) * 0.44,
+          baseY: 0.5 + Math.cos(golden * 1.08 - i * 0.31) * 0.43,
+          ampX: 0.011 + (i % 4) * 0.0035,
+          ampY: 0.012 + (i % 5) * 0.003,
+          freqX: 0.20 + (i % 6) * 0.035,
+          freqY: 0.17 + (i % 5) * 0.038,
+          phase: i * 0.92,
+          radius: (i % 5 === 0) ? 4.2 : 2.6,
+          tone: i % 3 // 0 = navy, 1 = orange, 2 = yellow
+        });
+      }
+
+      function resizeCanvas() {
+        width = window.innerWidth;
+        height = window.innerHeight;
+        dpr = Math.min(window.devicePixelRatio || 1, 2);
+        canvas.width = Math.floor(width * dpr);
+        canvas.height = Math.floor(height * dpr);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+
+      window.addEventListener('resize', resizeCanvas);
+      resizeCanvas();
+
+      // Pause-aware deterministic time tracker
+      let isCanvasPaused = false;
+      let virtualTime = 0;
+      let lastFrameNow = performance.now();
+
+      window.__setBgPaused = function (paused) {
+        isCanvasPaused = paused;
+      };
+
+      function renderFrame(now) {
+        try {
+          const dt = Math.min((now - lastFrameNow) * 0.001, 0.05);
+          lastFrameNow = now;
+          if (!isCanvasPaused) {
+            virtualTime += dt;
+          }
+          const t = virtualTime;
+
+          ctx.clearRect(0, 0, width, height);
+
+          // A. Floating Soft Pastel Gradient Orbs
+          const minDim = Math.min(width, height);
+          for (let i = 0; i < orbs.length; i++) {
+            const o = orbs[i];
+            const ox = (o.cx + Math.sin(t * o.fx + o.ph) * o.ax) * width;
+            const oy = (o.cy + Math.cos(t * o.fy + o.ph) * o.ay) * height;
+            const rad = o.r * Math.max(width, height);
+
+            const grad = ctx.createRadialGradient(ox, oy, rad * 0.05, ox, oy, rad);
+            grad.addColorStop(0, o.color);
+            grad.addColorStop(1, 'rgba(252, 251, 248, 0)');
+
+            ctx.fillStyle = grad;
+            ctx.beginPath();
+            ctx.arc(ox, oy, rad, 0, Math.PI * 2);
+            ctx.fill();
+          }
+
+          // B. Subtle Editorial Dot Grid
+          const dotGap = 42;
+          ctx.fillStyle = 'rgba(27, 58, 92, 0.075)';
+          const offsetX = (t * 4) % dotGap;
+          const offsetY = (t * 3) % dotGap;
+          for (let x = offsetX; x < width; x += dotGap) {
+            for (let y = offsetY; y < height; y += dotGap) {
+              ctx.beginPath();
+              ctx.arc(x, y, 1.15, 0, Math.PI * 2);
+              ctx.fill();
+            }
+          }
+
+          // C. Compute Deterministic Network Node Positions
+          const pts = nodes.map((n) => ({
+            x: (n.baseX + Math.sin(t * n.freqX + n.phase) * n.ampX) * width,
+            y: (n.baseY + Math.cos(t * n.freqY + n.phase) * n.ampY) * height,
+            r: n.radius,
+            tone: n.tone,
+            phase: n.phase
+          }));
+
+          // D. Connect Nearby Nodes with Faint Slate Lines + Orange/Navy Signal Particles
+          const maxDist = minDim * 0.30;
+          for (let i = 0; i < pts.length; i++) {
+            for (let j = i + 1; j < pts.length; j++) {
+              const dx = pts[i].x - pts[j].x;
+              const dy = pts[i].y - pts[j].y;
+              const dist = Math.hypot(dx, dy);
+
+              if (dist < maxDist) {
+                const alpha = (1 - dist / maxDist) * 0.14;
+                ctx.strokeStyle = `rgba(44, 82, 130, ${alpha.toFixed(4)})`;
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(pts[i].x, pts[i].y);
+                ctx.lineTo(pts[j].x, pts[j].y);
+                ctx.stroke();
+
+                // Small signal particle traveling smoothly along select links
+                if ((i + j) % 4 === 0) {
+                  const prog = (t * 0.28 + i * 0.19) % 1;
+                  const px = pts[i].x + (pts[j].x - pts[i].x) * prog;
+                  const py = pts[i].y + (pts[j].y - pts[i].y) * prog;
+                  ctx.fillStyle = ((i + j) % 8 === 0)
+                    ? 'rgba(249, 115, 22, 0.58)'
+                    : 'rgba(27, 58, 92, 0.48)';
+                  ctx.beginPath();
+                  ctx.arc(px, py, 2.2, 0, Math.PI * 2);
+                  ctx.fill();
+                }
+              }
+            }
+          }
+
+          // E. Draw Geometric Light Nodes & Soft Concentric Rings
+          for (let i = 0; i < pts.length; i++) {
+            const p = pts[i];
+
+            if (p.r > 3.5) {
+              const ringCycle = (t * 0.35 + p.phase * 0.2) % 1;
+              const ringRad = p.r + 4 + ringCycle * 22;
+              const ringAlpha = (1 - ringCycle) * 0.22;
+              ctx.strokeStyle = p.tone === 1
+                ? `rgba(249, 115, 22, ${ringAlpha.toFixed(4)})`
+                : `rgba(27, 58, 92, ${ringAlpha.toFixed(4)})`;
+              ctx.lineWidth = 1.2;
+              ctx.beginPath();
+              ctx.arc(p.x, p.y, ringRad, 0, Math.PI * 2);
+              ctx.stroke();
+            }
+
+            ctx.fillStyle = p.tone === 1
+              ? 'rgba(249, 115, 22, 0.42)'
+              : p.tone === 2
+                ? 'rgba(234, 179, 8, 0.45)'
+                : 'rgba(27, 58, 92, 0.30)';
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        } catch (err) {
+          // Graceful fallback
+        }
+
+        requestAnimationFrame(renderFrame);
+      }
+
+      requestAnimationFrame(renderFrame);
+    })();
+
+    /**
+     * =========================================================================
+     * 2. GSAP 3 ENTRANCE CHOREOGRAPHY, PLAYBACK CONTROLS & PASTEL CURTAIN EXIT
+     * =========================================================================
+     */
+    let masterTL = null;
+    let isNavigating = false;
+
+    function updatePauseUI(paused) {
+      const btnPause = document.getElementById('btn-pause');
+      const iconPause = document.getElementById('icon-pause');
+      const iconPlay = document.getElementById('icon-play');
+      const labelPause = document.getElementById('label-pause');
+      if (!btnPause) return;
+
+      btnPause.classList.toggle('is-paused', paused);
+      iconPause.style.display = paused ? 'none' : 'block';
+      iconPlay.style.display = paused ? 'block' : 'none';
+      labelPause.textContent = paused ? 'Play' : 'Pause';
+
+      if (typeof window.__setBgPaused === 'function') {
+        window.__setBgPaused(paused);
+      }
+    }
+
+    function buildEntranceTimeline() {
+      if (masterTL) masterTL.kill();
+      updatePauseUI(false);
+
+      masterTL = gsap.timeline({
+        defaults: { ease: 'power3.out' }
+      });
+
+      // Set clean starting states
+      gsap.set('.category-pill, .header-tag-right', { y: -14, opacity: 0 });
+      gsap.set('.hero-title', { yPercent: 105, opacity: 0 });
+      gsap.set('.subtitle-accent-bar', { scaleX: 0 });
+      gsap.set('.hero-subtitle', { x: -16, opacity: 0 });
+
+      gsap.set('.js-card-left', { y: 22, opacity: 0 });
+      gsap.set('.js-info-block', { x: -14, opacity: 0 });
+      gsap.set('.js-source-item', { y: 12, opacity: 0 });
+
+      gsap.set('.timeline-header-bar', { y: -10, opacity: 0 });
+      gsap.set('.timeline-line-fill', { scaleY: 0 });
+      gsap.set('.step-dot', { scale: 0, opacity: 0 });
+      gsap.set('.step-card', { x: 28, opacity: 0 });
+
+      gsap.set('.bottom-bar', { y: 18, opacity: 0 });
+
+      // 1. Header & Editorial Title Reveal
+      masterTL.to('.category-pill, .header-tag-right', {
+        y: 0,
+        opacity: 1,
+        duration: 0.48,
+        stagger: 0.08
+      }, 0.08);
+
+      masterTL.to('.hero-title', {
+        yPercent: 0,
+        opacity: 1,
+        duration: 0.65,
+        ease: 'expo.out'
+      }, 0.18);
+
+      masterTL.to('.subtitle-accent-bar', {
+        scaleX: 1,
+        duration: 0.5,
+        ease: 'power2.inOut'
+      }, 0.38);
+
+      masterTL.to('.hero-subtitle', {
+        x: 0,
+        opacity: 1,
+        duration: 0.45
+      }, 0.44);
+
+      // 2. Left Column: Identity Card & Official Sources
+      masterTL.to('.js-card-left', {
+        y: 0,
+        opacity: 1,
+        duration: 0.58,
+        stagger: 0.16
+      }, 0.48);
+
+      masterTL.to('.js-info-block', {
+        x: 0,
+        opacity: 1,
+        duration: 0.42,
+        stagger: 0.09
+      }, 0.68);
+
+      masterTL.to('.js-source-item', {
+        y: 0,
+        opacity: 1,
+        duration: 0.42,
+        stagger: 0.1
+      }, 0.88);
+
+      // 3. Right Column: Gradient Timeline Draw + 4 Sequential Cards
+      masterTL.to('.timeline-header-bar', {
+        y: 0,
+        opacity: 1,
+        duration: 0.42
+      }, 0.72);
+
+      masterTL.to('.timeline-line-fill', {
+        scaleY: 1,
+        duration: 1.25,
+        ease: 'power2.inOut'
+      }, 0.82);
+
+      const steps = document.querySelectorAll('.timeline-step');
+      steps.forEach((step, idx) => {
+        const dot = step.querySelector('.step-dot');
+        const card = step.querySelector('.step-card');
+        const tStart = 0.88 + idx * 0.24;
+
+        masterTL.to(dot, {
+          scale: 1,
+          opacity: 1,
+          duration: 0.36,
+          ease: 'back.out(2)'
+        }, tStart);
+
+        masterTL.to(card, {
+          x: 0,
+          opacity: 1,
+          duration: 0.48
+        }, tStart + 0.05);
+      });
+
+      // 4. Bottom Pill Navigation
+      masterTL.to('.bottom-bar', {
+        y: 0,
+        opacity: 1,
+        duration: 0.48
+      }, 1.85);
+
+      return masterTL;
+    }
+
+    /**
+     * Toggle Pause / Play for both GSAP timeline and background Canvas
+     */
+    function togglePause() {
+      if (isNavigating || !masterTL) return;
+      const nextState = !masterTL.paused();
+      masterTL.paused(nextState);
+      updatePauseUI(nextState);
+    }
+
+    /**
+     * Trigger smooth layered pastel curtain transition (Butter Yellow -> Orange -> Deep Navy)
+     * then navigate directly to index2.html
+     */
+    function navigateToSlide2() {
+      if (isNavigating) return;
+      isNavigating = true;
+
+      if (masterTL && masterTL.paused()) {
+        masterTL.paused(false);
+        updatePauseUI(false);
+      }
+
+      const exitTL = gsap.timeline({
+        onComplete: () => {
+          window.location.href = 'index2.html';
+        }
+      });
+
+      // Gently nudge stage left
+      exitTL.to('#slide-stage', {
+        x: -70,
+        opacity: 0.25,
+        duration: 0.42,
+        ease: 'power2.in'
+      }, 0);
+
+      // Layered pastel curtain sweep
+      exitTL.to('#curtain-yellow', {
+        x: '0%',
+        duration: 0.46,
+        ease: 'expo.inOut'
+      }, 0.02);
+
+      exitTL.to('#curtain-orange', {
+        x: '0%',
+        duration: 0.46,
+        ease: 'expo.inOut'
+      }, 0.10);
+
+      exitTL.to('#curtain-navy', {
+        x: '0%',
+        duration: 0.48,
+        ease: 'expo.inOut'
+      }, 0.18);
+    }
+
+    /**
+     * Start entrance choreography and wire interactions on window load
+     */
+    window.onload = function () {
+      try {
+        buildEntranceTimeline();
+
+        const btnReplay = document.getElementById('btn-replay');
+        const btnPause = document.getElementById('btn-pause');
+        const btnNext = document.getElementById('btn-next');
+
+        if (btnReplay) {
+          btnReplay.addEventListener('click', () => {
+            if (!isNavigating && masterTL) {
+              updatePauseUI(false);
+              masterTL.restart();
+            }
+          });
+        }
+
+        if (btnPause) {
+          btnPause.addEventListener('click', togglePause);
+        }
+
+        if (btnNext) {
+          btnNext.addEventListener('click', navigateToSlide2);
+        }
+
+        // Keyboard shortcuts: R (Replay), Space (Pause/Play), ArrowRight (Next Slide)
+        window.addEventListener('keydown', (e) => {
+          if (isNavigating) return;
+
+          if (e.key === 'r' || e.key === 'R') {
+            e.preventDefault();
+            if (masterTL) {
+              updatePauseUI(false);
+              masterTL.restart();
+            }
+          } else if (e.code === 'Space') {
+            e.preventDefault();
+            togglePause();
+          } else if (e.key === 'ArrowRight') {
+            e.preventDefault();
+            navigateToSlide2();
+          }
+        });
+      } catch (err) {
+        // Fallback visibility if CDN fails offline
+        document.getElementById('slide-stage').style.opacity = '1';
+      }
+    };
+  </script>
+</body>
+</html>
